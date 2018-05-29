@@ -1,0 +1,11 @@
+{
+    "python.pythonPath": "${workspaceFolder}/venv/bin/python",
+    // "python.pythonPath": "/Users/unsal/github/python/gfox-api/venv/bin/python",
+    "python.linting.mypyArgs": [
+        "--ignore-missing-imports",
+        "--follow-imports=silent",
+        "--errors-only"
+    ],
+    "editor.tabSize": 2,
+    "editor.fontFamily": "Menlo, Monaco, 'Courier New', monospace",
+}
