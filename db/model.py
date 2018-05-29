@@ -10,5 +10,11 @@ class Profiller(Base):
     name = Column(String(255))
     timestamp = Column(TIMESTAMP, default = datetime.now())
 
+class Birimler(Base):
+    __tablename__ = 'birimler'
+    id = Column(Integer(), primary_key=True)
+    name = Column(String(255))
+    timestamp = Column(TIMESTAMP, default=datetime.now())
+
 
 

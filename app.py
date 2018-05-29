@@ -1,5 +1,6 @@
 from flask import Flask
 from api.profiller import ProfillerApi
+from api.birimler import BirimlerApi
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -16,10 +17,16 @@ CORS(app)
 def root():
     return 'Python web server working successfully...'
 
-# Tüm profilleri getir
+# Profiller
 @app.route('/profiller', methods=['GET'])
-def getMessage():
+def getProfiller():
     api = ProfillerApi()
+    return api.message()
+
+# Birimler
+@app.route('/birimler', methods=['GET'])
+def getBirimler():
+    api = BirimlerApi()
     return api.message()
 
 if __name__=="__main__":
