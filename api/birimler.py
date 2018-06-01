@@ -3,7 +3,7 @@ from flask import jsonify
 from db.connection import Connect
 from db.model import Birimler
 
-class BirimlerApi():
+class GetBirimler():
     def __init__(self):
         self.conn = Connect()
         self.session = self.conn.session()
@@ -34,7 +34,7 @@ class BirimlerApi():
 
 
 # if __name__ == "__main__":
-#     e = BirimlerApi()
+#     e = GetBirimler()
 #     e.message()
 
     # print("Base created successfully..")

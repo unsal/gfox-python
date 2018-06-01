@@ -1,6 +1,9 @@
 from flask import Flask
-from api.profiller import ProfillerApi
-from api.birimler import BirimlerApi
+from api.profiller import GetProfiller
+from api.birimler import GetBirimler
+from api.kv import GetKV
+from api.islemeAmaclari import GetIslemeAmaclari
+from api.toplamaKanallari import GetToplamaKanallari
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -20,14 +23,34 @@ def root():
 # Profiller
 @app.route('/profiller', methods=['GET'])
 def getProfiller():
-    api = ProfillerApi()
+    api = GetProfiller()
     return api.message()
 
 # Birimler
 @app.route('/birimler', methods=['GET'])
 def getBirimler():
-    api = BirimlerApi()
+    api = GetBirimler()
     return api.message()
+
+# KV
+@app.route('/kv', methods=['GET'])
+def getKV():
+    api = GetKV()
+    return api.message()
+
+# Islenme Amacı
+@app.route('/islemeamaclari', methods=['GET'])
+def getIslemeAmaclari():
+    api = GetIslemeAmaclari()
+    return api.message()
+
+# Toplama Kanalları
+@app.route('/toplamakanallari', methods=['GET'])
+def getToplamaKanallari():
+    api = GetToplamaKanallari()
+    return api.message()
+
+
 
 if __name__=="__main__":
     app.run(host="0.0.0.0", port=2300, debug=True)
