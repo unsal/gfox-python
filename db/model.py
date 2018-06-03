@@ -1,38 +1,63 @@
-from sqlalchemy import (Column, String, Integer, TIMESTAMP)
+from sqlalchemy import (Column, String, Integer, TIMESTAMP, Boolean)
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
+#_Base tek _ underscore private olduğu ve  dışardan import edilemeyeceği anlamnıa geliyor.
+# tek _ classlar için, __ çifti tanım ve fonksiyonlar için
+_Base = declarative_base()
 
-class Profiller(Base):
+# Custom base class
+class Tanimlar(object):
+    id = Column(Integer(), primary_key=True)
+    name = Column(String(255))
+    timestamp = Column(TIMESTAMP, default=datetime.now())
+
+class Profiller(Tanimlar, _Base):
     __tablename__ = 'profiller'
-    id = Column(Integer(), primary_key=True)
-    name = Column(String(255))
-    timestamp = Column(TIMESTAMP, default = datetime.now())
 
-class Birimler(Base):
+class Birimler(Tanimlar, _Base):
     __tablename__ = 'birimler'
-    id = Column(Integer(), primary_key=True)
-    name = Column(String(255))
-    timestamp = Column(TIMESTAMP, default=datetime.now())
 
-class KV(Base):
+class KV(Tanimlar, _Base):
     __tablename__ = 'kv'
-    id = Column(Integer(), primary_key=True)
-    name = Column(String(255))
-    timestamp = Column(TIMESTAMP, default=datetime.now())
 
-class IslemeAmaclari(Base):
+class IslemeAmaclari(Tanimlar, _Base):
     __tablename__ = 'isleme_amaclari'
-    id = Column(Integer(), primary_key=True)
-    name = Column(String(255))
-    timestamp = Column(TIMESTAMP, default=datetime.now())
 
-class ToplamaKanallari(Base):
+class Kanallar(Tanimlar, _Base):
     __tablename__ = 'kanallar'
-    id = Column(Integer(), primary_key=True)
-    name = Column(String(255))
-    timestamp = Column(TIMESTAMP, default=datetime.now())
+
+class Sistemler(Tanimlar, _Base):
+    __tablename__ = 'sistemler'
+    type = Column(String(30))
+
+class Dokumanlar(Tanimlar, _Base):
+    __tablename__ = 'dokumanlar'
+
+class Dayanaklar(Tanimlar, _Base):
+    __tablename__ = 'dayanaklar'
+
+class Ortamlar(Tanimlar, _Base):
+    __tablename__ = 'ortamlar'
+
+class Sureler(Tanimlar, _Base):
+    __tablename__ = 'sureler'
+
+class Kurumlar(Tanimlar, _Base):
+    __tablename__ = 'kurumlar'
+
+class PaylasimAmaclari(Tanimlar, _Base):
+    __tablename__ = 'paylasim_amaclari'
+
+class PaylasimSekilleri(Tanimlar, _Base):
+    __tablename__ = 'paylasim_sekilleri'
+
+class Ulkeler(Tanimlar, _Base):
+    __tablename__ = 'ulkeler'
+    phone_area = Column(String(3))
+    secure = Column(Boolean())
+
+
 
 
 
