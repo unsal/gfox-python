@@ -46,7 +46,7 @@ class GetTanimlar():
             return Response("sa query error! ",e)
 
 
-def message(id):
+def tanimlarMessage(id):
     if (id == "profiller"):
             t = GetTanimlar(Profiller)
             return t.message()

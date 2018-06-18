@@ -57,6 +57,13 @@ class Ulkeler(Tanimlar, _Base):
     phone_area = Column(String(3))
     secure = Column(Boolean())
 
+class SSKurumlar(_Base):
+    __tablename__ = 'ss_kurumlar'
+    id = Column(Integer(), primary_key=True)
+    birim_id = Column(Integer())
+    kurum_id = Column(Integer())
+    timestamp = Column(TIMESTAMP, default=datetime.now())
+
 
 
 

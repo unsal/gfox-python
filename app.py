@@ -1,6 +1,6 @@
 from flask import Flask
-from api.tanimlar import GetTanimlar, message
-from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Dayanaklar, Ortamlar, Sureler
+from api.tanimlar import tanimlarMessage
+from api.ss import ssMessage
 
 from flask_cors import CORS
 
@@ -27,7 +27,12 @@ def root():
 # Tanımlar
 @app.route('/tanimlar/<id>', methods=['GET'])
 def getTanimlar(id):
-    return message(id)
+    return tanimlarMessage(id)
+
+# Tanımlar
+@app.route('/ss/<id>', methods=['GET'])
+def getSS(id):
+    return ssMessage(id)
 
 if __name__=="__main__":
     app.run(host="0.0.0.0", port=2300, debug=True)
