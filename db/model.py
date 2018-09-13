@@ -8,7 +8,7 @@ _Base = declarative_base()
 
 # Custom base class
 class Tanimlar(object):
-    id = Column(Integer(), primary_key=True)
+    pidm = Column(Integer(), primary_key=True, autoincrement=True)
     name = Column(String(255))
     timestamp = Column(TIMESTAMP, default=datetime.now())
 
@@ -59,10 +59,63 @@ class Ulkeler(Tanimlar, _Base):
 
 class SSKurumlar(_Base):
     __tablename__ = 'ss_kurumlar'
-    id = Column(Integer(), primary_key=True)
-    birim_id = Column(Integer())
-    kurum_id = Column(Integer())
+    pidm = Column(Integer(), primary_key=True)
+    birim_pidm = Column(Integer())
+    kurum_pidm = Column(Integer())
     timestamp = Column(TIMESTAMP, default=datetime.now())
+
+# react tarafından post edilen ID'leri tek noktadan kolayca yönetebilmek için yazıldı.
+class TanimlarID():
+      Profiller = "profiller"
+      Birimler = "birimler"
+      Dayanaklar = "dayanaklar"
+      Dokumanlar = "dokumanlar"
+      IslemeAmaclari = "islemeamaclari"
+      ToplamaKanallari = "toplamakanallari"
+      Kurumlar = "kurumlar"
+      KV = "kv"
+      ArsivOrtamlari = "arsivortamlari"
+      PaylasimAmaclari = "paylasimamaclari"
+      PaylasimSekilleri = "paylasimsekilleri"
+      KVSistemler = "kvsistemler"
+      SaklamaSuresi = "saklamasuresi"
+      GuvenliUlkeler = "guvenliulkeler"
+
+def getModel(id):
+    if (id == TanimlarID.Profiller):
+            model = Profiller
+    elif (id==TanimlarID.Birimler):
+            model = Birimler
+    elif (id==TanimlarID.Dayanaklar):
+            model = Dayanaklar
+    elif (id==TanimlarID.Dokumanlar):
+            model = Dokumanlar
+    elif (id==TanimlarID.IslemeAmaclari):
+            model = IslemeAmaclari
+    elif (id==TanimlarID.ToplamaKanallari):
+            model = Kanallar
+    elif (id==TanimlarID.KV):
+            model = KV
+    elif (id==TanimlarID.ArsivOrtamlari):
+            model = Ortamlar
+    elif (id==TanimlarID.KVSistemler):
+            model=Sistemler
+    elif (id==TanimlarID.SaklamaSuresi):
+            model = Sureler
+    elif (id==TanimlarID.Kurumlar):
+            model = Kurumlar
+    elif (id==TanimlarID.PaylasimAmaclari):
+            model = PaylasimAmaclari
+    elif (id==TanimlarID.PaylasimSekilleri):
+            model = PaylasimSekilleri
+    elif (id==TanimlarID.GuvenliUlkeler):
+            model = Ulkeler
+    else:
+            model = None
+
+    return model
+
+
 
 
 

@@ -8,4 +8,6 @@
     ],
     "editor.tabSize": 2,
     "editor.fontFamily": "Menlo, Monaco, 'Courier New', monospace",
+    "favorites.sortDirection": "ASC",
+    "favorites.groupsFirst": true,
 }

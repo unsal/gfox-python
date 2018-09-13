@@ -10,7 +10,7 @@ Base = declarative_base()
 
 class Profiller(Base):
     __tablename__ = 'profiller'
-    id = Column(Integer(), primary_key=True)
+    pidm = Column(Integer(), primary_key=True, autoincrement=True)
     name = Column(String(255))
     timestamp = Column(TIMESTAMP, default = datetime.now())
 

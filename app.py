@@ -1,12 +1,13 @@
-from flask import Flask
-from api.tanimlar import tanimlarMessage
+from flask import Flask, request
+from api.tanimlar import getTanim, addTanim, delTanim
 from api.ss import ssMessage
+from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar,Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler
 
 from flask_cors import CORS
 
 app = Flask(__name__)
 
-#TR karakterler \n\bbn\a vb. ascii olarak basmaası için
+# TR karakterler \n\bbn\a vb. ascii olarak basmaası iin
 app.config['JSON_AS_ASCII'] = False
 
 # React tarafında Access-Control-Allow-Origin hatasını önlemek için
@@ -24,12 +25,26 @@ def root():
 #     api = GetTanimlar(Profiller)
 #     return api.message()
 
-# Tanımlar
-@app.route('/tanimlar/<id>', methods=['GET'])
-def getTanimlar(id):
-    return tanimlarMessage(id)
 
-# Tanımlar
+# GET TANIM
+@app.route('/tanimlar/<id>', methods=['GET'])
+def get(id):
+    return getTanim(id)
+
+# ADD TANIM
+@app.route('/tanimlar/add', methods=['POST'])
+def add():
+    _form = request.form
+    return addTanim(_form)
+
+
+# DELETE TANIM
+@app.route('/tanimlar/del', methods=['POST'])
+def delete():
+    _form = request.form
+    return delTanim(_form)
+
+# Süreç Sahibi
 @app.route('/ss/<id>', methods=['GET'])
 def getSS(id):
     return ssMessage(id)
