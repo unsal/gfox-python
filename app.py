@@ -1,6 +1,10 @@
-from flask import Flask, request
-from api.tanimlar import getTanim, addTanim, delTanim
-from api.ss import ssMessage
+# - *- coding: utf- 8 - *-
+from flask import Flask
+from flask import request
+# API
+from api.tanimlar.tanimlar import getTanim, addTanim, deleteTanim, getNextPidm
+from api.ss.sskurumlar import getSurecSahipleri, getPaylasilanKurumlar
+
 from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar,Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler
 
 from flask_cors import CORS
@@ -19,35 +23,46 @@ CORS(app)
 def root():
     return 'Python web server working successfully...'
 
-# Profiller
-# @app.route('/profiller', methods=['GET'])
-# def getProfiller():
-#     api = GetTanimlar(Profiller)
-#     return api.message()
-
-
+# TANIMLAR **************************************
 # GET TANIM
 @app.route('/tanimlar/<id>', methods=['GET'])
-def get(id):
-    return getTanim(id)
+def _getTanim(id):
+    json = getTanim(id)
+    return json
 
 # ADD TANIM
 @app.route('/tanimlar/add', methods=['POST'])
-def add():
+def _addTanim():
     _form = request.form
-    return addTanim(_form)
+    response = addTanim(_form)
+    return response
 
 
 # DELETE TANIM
 @app.route('/tanimlar/del', methods=['POST'])
-def delete():
+def _deleteTanim():
     _form = request.form
-    return delTanim(_form)
+    response = deleteTanim(_form)
+    return response
 
-# Süreç Sahibi
-@app.route('/ss/<id>', methods=['GET'])
-def getSS(id):
-    return ssMessage(id)
+
+# SS ******************************************************
+# 1) iki bileşendir. önce süreç sahibi birimleri listelemek içindir.
+@app.route('/ss/birimler', methods=['GET'])
+def _getSurecSahipleri():
+    json = getSurecSahipleri()
+    return json
+# 2) süreç sahibi birimlerin paylaşan kurumlarını listelemek için
+@app.route('/ss/birimler/kurumlar/<id>', methods=['GET'])
+def _getPaylasilanKurumlar(id):
+    json = getPaylasilanKurumlar(id)
+    return json
+
+# Get Next Pidm
+@app.route('/tanimlar/pidm/<id>', methods=['GET'])
+def _getNextPidm(id):
+    json = getNextPidm(id)
+    return json
 
 if __name__=="__main__":
     app.run(host="0.0.0.0", port=2300, debug=True)

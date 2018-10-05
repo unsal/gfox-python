@@ -6,6 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 # tek _ classlar için, __ çifti tanım ve fonksiyonlar için
 _Base = declarative_base()
 
+# TANIMLAR ********************************************************
 # Custom base class
 class Tanimlar(object):
     pidm = Column(Integer(), primary_key=True, autoincrement=True)
@@ -29,7 +30,7 @@ class Kanallar(Tanimlar, _Base):
 
 class Sistemler(Tanimlar, _Base):
     __tablename__ = 'sistemler'
-    type = Column(String(30))
+    local = Column(Boolean())
 
 class Dokumanlar(Tanimlar, _Base):
     __tablename__ = 'dokumanlar'
@@ -71,15 +72,15 @@ class TanimlarID():
       Dayanaklar = "dayanaklar"
       Dokumanlar = "dokumanlar"
       IslemeAmaclari = "islemeamaclari"
-      ToplamaKanallari = "toplamakanallari"
+      ToplamaKanallari = "kanallar"
       Kurumlar = "kurumlar"
       KV = "kv"
-      ArsivOrtamlari = "arsivortamlari"
+      ArsivOrtamlari = "ortamlar"
       PaylasimAmaclari = "paylasimamaclari"
       PaylasimSekilleri = "paylasimsekilleri"
       KVSistemler = "kvsistemler"
-      SaklamaSuresi = "saklamasuresi"
-      GuvenliUlkeler = "guvenliulkeler"
+      SaklamaSuresi = "sureler"
+      GuvenliUlkeler = "ulkeler"
 
 def getModel(id):
     if (id == TanimlarID.Profiller):

@@ -36,7 +36,7 @@ class GetKurumlar():
                 return _json
 
         except Exception as e:
-            return Response("sa query error! ",e)
+            return Response("DB SQL Exception! ",e)
 
 
 class GetDokumanlar():
