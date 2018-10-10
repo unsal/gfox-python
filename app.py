@@ -3,7 +3,7 @@ from flask import Flask
 from flask import request
 # API
 from api.tanimlar.tanimlar import getTanim, addTanim, deleteTanim, getNextPidm
-from api.ss.sskurumlar import getSurecSahipleri, getPaylasilanKurumlar
+from api.ss.sskurumlar import getSurecSahipleri, addSSKurum, delSSKurum
 
 from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar,Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler
 
@@ -45,24 +45,34 @@ def _deleteTanim():
     response = deleteTanim(_form)
     return response
 
-
-# SS ******************************************************
-# 1) iki bileşendir. önce süreç sahibi birimleri listelemek içindir.
-@app.route('/ss/birimler', methods=['GET'])
-def _getSurecSahipleri():
-    json = getSurecSahipleri()
-    return json
-# 2) süreç sahibi birimlerin paylaşan kurumlarını listelemek için
-@app.route('/ss/birimler/kurumlar/<id>', methods=['GET'])
-def _getPaylasilanKurumlar(id):
-    json = getPaylasilanKurumlar(id)
-    return json
-
 # Get Next Pidm
 @app.route('/tanimlar/pidm/<id>', methods=['GET'])
 def _getNextPidm(id):
     json = getNextPidm(id)
     return json
+
+# SS ******************************************************
+# GET
+@app.route('/ss/paylasilankurumlar', methods=['GET'])
+def _getSurecSahipleri():
+    json = getSurecSahipleri()
+    return json
+
+# ADD
+@app.route('/ss/paylasilankurumlar/add', methods=['POST'])
+def _addSSKurum():
+    _form = request.form
+    response = addSSKurum(_form)
+    return response
+
+# DELETE
+@app.route('/ss/paylasilankurumlar/del', methods=['POST'])
+def _delSSKurum():
+    _form = request.form
+    response = delSSKurum(_form)
+    return response
+
+
 
 if __name__=="__main__":
     app.run(host="0.0.0.0", port=2300, debug=True)

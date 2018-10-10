@@ -69,7 +69,7 @@ class Tanimlar():
                 try:
                         _pidm = int(self.model.pidm)
                         row = self.session.query(
-                            self.model.__class__).filter_by(pidm=_pidm).one()
+                        self.model.__class__).filter_by(pidm=_pidm).one()
                         self.session.delete(row)
                         self.session.commit()
                         print(row.name+" deleted successfully")
@@ -123,11 +123,11 @@ def getTanim(id):
 def addTanim(form):
     _id = form.get('id')
     _name = form.get('name')
-   # id=kvsistemler
+   # id=kvsistemler.. harici => local
     _local = str2bool(form.get("local"))
     # Güvenli Ülkeler
     _phone_area = form.get('phone_area')
-#     _secure = str2bool(form.get('secure'))
+    _secure = str2bool(form.get('secure'))
 
     model = getModel(_id)
     if (_id==TanimlarID.GuvenliUlkeler):

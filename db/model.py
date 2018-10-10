@@ -58,7 +58,7 @@ class Ulkeler(Tanimlar, _Base):
     phone_area = Column(String(3))
     secure = Column(Boolean())
 
-class SSKurumlar(_Base):
+class SSKurumlarModel(_Base):
     __tablename__ = 'ss_kurumlar'
     pidm = Column(Integer(), primary_key=True)
     birim_pidm = Column(Integer())
