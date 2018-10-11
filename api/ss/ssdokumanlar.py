@@ -4,9 +4,9 @@ from flask import abort
 from flask import request
 from db.connection import Connect
 from datetime import datetime
-from db.model import SSKurumlarModel
+from db.model import SSDokumanlarModel
 
-class SSKurumlarClass():
+class SSDokumanlarClass():
         def __init__(self, modelClass):
                 self.conn = Connect()
                 self.session = self.conn.session()
@@ -18,15 +18,7 @@ class SSKurumlarClass():
         def getSS(self):
                 try:
                         dict = []
-                        dictDetay = [] # Paylaşılan Kurumlar
-
-                        # SADECE SS_KURUMLAR Tablosundaki kayıtları getiririr
-                        # sql =  """
-                        #         select ss.birim_pidm birim_pidm, b.name birim_name
-                        #         from ss_kurumlar ss, birimler b
-                        #         where ss.birim_pidm = b.pidm
-                        #         group by birim_pidm, birim_name
-                        #        """
+                        dictDetay = [] # Dokumanlar
 
                         sql =  """
                                 select pidm birim_pidm, name birim_name
@@ -37,7 +29,7 @@ class SSKurumlarClass():
 
                         for row in data:
                                 dictDetay = self.getSSDetay(row.birim_pidm)
-                                dict.append({'birim_pidm':row.birim_pidm ,'birim_name':row.birim_name, 'kurumlar':dictDetay})
+                                dict.append({'birim_pidm':row.birim_pidm ,'birim_name':row.birim_name, 'dokumanlar':dictDetay})
 
                         _json = jsonify(dict)
 
@@ -50,14 +42,14 @@ class SSKurumlarClass():
                         return Response("DB SQL Exception! ",e)
 
 
-        def getSSDetay(self, birim_pidm): #Paylaşılan Kurumlar
+        def getSSDetay(self, birim_pidm): #Dokumanlar
                 try:
                         dict = []
 
                         sql =  """
-                                select ss.pidm pidm, k.pidm kurum_pidm, k.name kurum_name
-                                from ss_kurumlar ss, kurumlar k
-                                where ss.kurum_pidm = k.pidm and
+                                select ss.pidm pidm, d.name dokuman_name, y.name yayin_name
+                                from ss_dokumanlar ss, dokumanlar d, ss_yayindurumu y
+                                where ss.dokuman_pidm = d.pidm and ss.yayin_pidm = y.pidm and
                                 ss.birim_pidm=%s
                                 """%(birim_pidm)
 
@@ -65,15 +57,9 @@ class SSKurumlarClass():
 
                         for row in data:
                                 # dict.append({'pidm':row.pidm, 'birim':row.birim, 'kurum':row.kurum,'timestamp':row.timestamp})
-                                dict.append({'pidm':row.pidm,'kurum_pidm':row.kurum_pidm, 'kurum_name':row.kurum_name})
+                                dict.append({'pidm':row.pidm,'dokuman_name':row.dokuman_name, 'yayin_name':row.yayin_name})
 
                         return dict
-                        # _json = jsonify(dict)
-
-                        # if (len(dict) == 0):
-                        #         return Response("NO DATA FOUND!")
-                        # else:
-                        #         return _json
 
                 except Exception as e:
                         return Response("DB SQL Exception! ",e)
@@ -85,7 +71,7 @@ class SSKurumlarClass():
                         print("Add Successfully")
                         return '', 204
                 except Exception as e:
-                        return Response("SSKurumlarClass DB Add Exception! ",e)
+                        return Response("SSDokumanlarClass DB Add Exception! ",e)
 
         def delete(self):
                 try:
@@ -100,21 +86,21 @@ class SSKurumlarClass():
                         return '', 404
 
 
-def getSSKurumlar():
-    cc = SSKurumlarClass(SSKurumlarModel)
+def getSSDokumanlar():
+    cc = SSDokumanlarClass(SSDokumanlarModel)
     return cc.getSS()
 
-def addSSKurum(form):
+def addSSDokuman(form):
      _birim_pidm = form.get('birim_pidm')
      _kurum_pidm = form.get('kurum_pidm')
 
-     cc=SSKurumlarClass(SSKurumlarModel(birim_pidm=_birim_pidm, kurum_pidm=_kurum_pidm))
+     cc=SSDokumanlarClass(SSDokumanlarModel(birim_pidm=_birim_pidm, kurum_pidm=_kurum_pidm))
 
      return cc.add()
 
-def delSSKurum(form):
+def delSSDokuman(form):
     _pidm = form.get('pidm')
 
-    cc=SSKurumlarClass(SSKurumlarModel(pidm=_pidm))
+    cc=SSDokumanlarClass(SSDokumanlarModel(pidm=_pidm))
 
     return cc.delete()

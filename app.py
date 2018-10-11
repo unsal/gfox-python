@@ -3,7 +3,8 @@ from flask import Flask
 from flask import request
 # API
 from api.tanimlar.tanimlar import getTanim, addTanim, deleteTanim, getNextPidm
-from api.ss.sskurumlar import getSurecSahipleri, addSSKurum, delSSKurum
+from api.ss.sskurumlar import getSSKurumlar, addSSKurum, delSSKurum
+from api.ss.ssdokumanlar import getSSDokumanlar, addSSDokuman, delSSDokuman
 
 from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar,Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler
 
@@ -54,8 +55,8 @@ def _getNextPidm(id):
 # SS ******************************************************
 # GET
 @app.route('/ss/paylasilankurumlar', methods=['GET'])
-def _getSurecSahipleri():
-    json = getSurecSahipleri()
+def _getSSKurumlar():
+    json = getSSKurumlar()
     return json
 
 # ADD
@@ -72,6 +73,11 @@ def _delSSKurum():
     response = delSSKurum(_form)
     return response
 
+# GET
+@app.route('/ss/dokumanlar', methods=['GET'])
+def _getSSDokumanlar():
+    json = getSSDokumanlar()
+    return json
 
 
 if __name__=="__main__":

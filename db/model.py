@@ -58,11 +58,20 @@ class Ulkeler(Tanimlar, _Base):
     phone_area = Column(String(3))
     secure = Column(Boolean())
 
+# SS *********************************
 class SSKurumlarModel(_Base):
     __tablename__ = 'ss_kurumlar'
     pidm = Column(Integer(), primary_key=True)
     birim_pidm = Column(Integer())
     kurum_pidm = Column(Integer())
+    timestamp = Column(TIMESTAMP, default=datetime.now())
+
+class SSDokumanlarModel(_Base):
+    __tablename__ = 'ss_dokumanlar'
+    pidm = Column(Integer(), primary_key=True)
+    birim_pidm = Column(Integer())
+    dokuman_pidm = Column(Integer())
+    yayin_pidm = Column(Integer())
     timestamp = Column(TIMESTAMP, default=datetime.now())
 
 # react tarafından post edilen ID'leri tek noktadan kolayca yönetebilmek için yazıldı.
