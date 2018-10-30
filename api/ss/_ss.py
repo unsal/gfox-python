@@ -31,7 +31,7 @@ class GetKurumlar():
             _json = jsonify(dict)
 
             if (len(dict) == 0):
-                return Response("NO DATA FOUND!")
+                return Response([])
             else:
                 return _json
 
@@ -66,7 +66,7 @@ class GetDokumanlar():
             _json = jsonify(dict)
 
             if (len(dict) == 0):
-                return Response("NO DATA FOUND!")
+                return Response([])
             else:
                 return _json
 
@@ -101,7 +101,7 @@ class GetToplamaKanallari():
             _json = jsonify(dict)
 
             if (len(dict) == 0):
-                return Response("NO DATA FOUND!")
+                return Response([])
             else:
                 return _json
 
@@ -136,7 +136,7 @@ class GetKullanilanSistemler():
             _json = jsonify(dict)
 
             if (len(dict) == 0):
-                return Response("NO DATA FOUND!")
+                return Response([])
             else:
                 return _json
 

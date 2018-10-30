@@ -6,7 +6,7 @@ from db.connection import Connect
 from datetime import datetime
 from db.model import SSDokumanlarModel
 
-class SSDokumanlarClass():
+class SSDokumanlar():
         def __init__(self, modelClass):
                 self.conn = Connect()
                 self.session = self.conn.session()
@@ -34,7 +34,7 @@ class SSDokumanlarClass():
                         _json = jsonify(dict)
 
                         if (len(dict) == 0):
-                                return Response("NO DATA FOUND!")
+                                return Response([])
                         else:
                                 return _json
 
@@ -71,7 +71,7 @@ class SSDokumanlarClass():
                         print("Add Successfully")
                         return '', 204
                 except Exception as e:
-                        return Response("SSDokumanlarClass DB Add Exception! ",e)
+                        return Response("SSDokumanlar DB Add Exception! ",e)
 
         def delete(self):
                 try:
@@ -87,20 +87,21 @@ class SSDokumanlarClass():
 
 
 def getSSDokumanlar():
-    cc = SSDokumanlarClass(SSDokumanlarModel)
+    cc = SSDokumanlar(SSDokumanlarModel)
     return cc.getSS()
 
 def addSSDokuman(form):
      _birim_pidm = form.get('birim_pidm')
-     _kurum_pidm = form.get('kurum_pidm')
+     _dokuman_pidm = form.get('dokuman_pidm')
+     _yayin_pidm = form.get('yayin_pidm')
 
-     cc=SSDokumanlarClass(SSDokumanlarModel(birim_pidm=_birim_pidm, kurum_pidm=_kurum_pidm))
+     cc=SSDokumanlar(SSDokumanlarModel(birim_pidm=_birim_pidm, dokuman_pidm=_dokuman_pidm, yayin_pidm=_yayin_pidm))
 
      return cc.add()
 
 def delSSDokuman(form):
     _pidm = form.get('pidm')
 
-    cc=SSDokumanlarClass(SSDokumanlarModel(pidm=_pidm))
+    cc=SSDokumanlar(SSDokumanlarModel(pidm=_pidm))
 
     return cc.delete()

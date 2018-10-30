@@ -4,3 +4,4 @@ def str2bool(str):
     return True
   else:
     return False
+

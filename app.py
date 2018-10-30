@@ -1,10 +1,17 @@
 # - *- coding: utf- 8 - *-
-from flask import Flask
+from flask import Flask, jsonify
 from flask import request
+import json
+
 # API
 from api.tanimlar.tanimlar import getTanim, addTanim, deleteTanim, getNextPidm
-from api.ss.sskurumlar import getSSKurumlar, addSSKurum, delSSKurum
 from api.ss.ssdokumanlar import getSSDokumanlar, addSSDokuman, delSSDokuman
+from api.ss.sscommon import getSSCommon, deleteSSCommon, addSSCommon
+from api.verbis.kvprofil import get_kvprofil, add_kvprofil, update_kvprofil, delete_kvprofil
+from api.verbis.kvpaylasim import get_kvpaylasim, add_kvpaylasim, update_kvpaylasim, delete_kvpaylasim
+from api.verbis.kvanaveri import get_kvanaveri, add_kvanaveri, delete_kvanaveri, update_kvanaveri
+from api.verbis.kvtalepler import get_kvtalepler, add_kvtalepler
+
 
 from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar,Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler
 
@@ -28,8 +35,8 @@ def root():
 # GET TANIM
 @app.route('/tanimlar/<id>', methods=['GET'])
 def _getTanim(id):
-    json = getTanim(id)
-    return json
+    data = getTanim(id)
+    return data
 
 # ADD TANIM
 @app.route('/tanimlar/add', methods=['POST'])
@@ -49,37 +56,158 @@ def _deleteTanim():
 # Get Next Pidm
 @app.route('/tanimlar/pidm/<id>', methods=['GET'])
 def _getNextPidm(id):
-    json = getNextPidm(id)
-    return json
+    data = getNextPidm(id)
+    return data
 
 # SS ******************************************************
-# GET
-@app.route('/ss/paylasilankurumlar', methods=['GET'])
-def _getSSKurumlar():
-    json = getSSKurumlar()
-    return json
+# GET COMMON
+@app.route('/ss/common/<id>', methods=['GET'])
+def _getSSCommon(id):
+    data = getSSCommon(id)
+    return data
 
-# ADD
-@app.route('/ss/paylasilankurumlar/add', methods=['POST'])
+# DEL COMMON
+@app.route('/ss/common/delete', methods=['POST'])
+def _delSSCommon():
+    _form = request.form
+    response = deleteSSCommon(_form)
+    return response
+
+# ADD COMMON
+@app.route('/ss/common/add', methods=['POST'])
 def _addSSKurum():
     _form = request.form
-    response = addSSKurum(_form)
+    response = addSSCommon(_form)
     return response
 
-# DELETE
-@app.route('/ss/paylasilankurumlar/del', methods=['POST'])
-def _delSSKurum():
-    _form = request.form
-    response = delSSKurum(_form)
-    return response
 
-# GET
+# GET SS DOKUMANLAR
 @app.route('/ss/dokumanlar', methods=['GET'])
 def _getSSDokumanlar():
-    json = getSSDokumanlar()
-    return json
+    data = getSSDokumanlar()
+    return data
+
+# ADD SS DOKUMAN
+@app.route('/ss/dokumanlar/add', methods=['POST'])
+def _addSSDokuman():
+    _form = request.form
+    response = addSSDokuman(_form)
+    return response
+
+# DELETE SS DOKUMAN
+@app.route('/ss/dokumanlar/del', methods=['POST'])
+def _delSSDokuman():
+    _form = request.form
+    response = delSSDokuman(_form)
+    return response
 
 
+# ******************** VERBIS ************************************
+#************** KV PROFIL **************************
+@app.route('/verbis/kvprofil', methods=['GET'])
+# KVProfil - GET
+def _get_kvprofil():
+    response = get_kvprofil()
+    return response
+
+@app.route('/verbis/kvprofil/add', methods=['POST'])
+# KVProfil - ADD
+def _add_kvprofil():
+    data = request.get_json(silent=True)
+    response = add_kvprofil(data) #data=>full json kvprofil datasıdır
+    return response
+
+@app.route('/verbis/kvprofil/update', methods=['POST'])
+# KVProfil - UPDATE
+def _update_kvprofil():
+    data = request.get_json(silent=True)
+    response = update_kvprofil(data) #data=>full json kvprofil datasıdır
+    return response
+
+@app.route('/verbis/kvprofil/delete', methods=['POST'])
+# KVProfil - DELETE
+def _delete_kvprofil():
+    data = request.get_json(silent=True)
+    response = delete_kvprofil(data) #data=>full json kvprofil datasıdır
+    return response
+
+# ****************** KVPAYLASIM ************************************************
+@app.route('/verbis/kvpaylasim', methods=['GET'])
+# GET
+def _get_kvpaylasim():
+    response = get_kvpaylasim()
+    return response
+
+@app.route('/verbis/kvpaylasim/add', methods=['POST'])
+# ADD
+def _add_kvpaylasim():
+    data = request.get_json(silent=True)
+    response = add_kvpaylasim(data)
+    return response
+
+@app.route('/verbis/kvpaylasim/update/<id>', methods=['POST'])
+# UPDATE & DELETE DATACELL
+def _update_kvpaylasim(id):
+    data = request.get_json(silent=True)
+    response = update_kvpaylasim(id, data)
+    return response
+
+@app.route('/verbis/kvpaylasim/delete', methods=['POST'])
+# DELETE ROW
+def _delete_kvpaylasim():
+    data = request.get_json(silent=True)
+    response = delete_kvpaylasim(data) # [{pidm}]
+    return response
+
+# ****************** KVANAVERI ************************************************
+@app.route('/verbis/kvanaveri', methods=['GET'])
+# GET
+def _get_kvanaveri():
+    response = get_kvanaveri()
+    return response
+
+@app.route('/verbis/kvanaveri/add', methods=['POST'])
+# ADD
+def _add_kvanaveri():
+    data = request.get_json(silent=True)
+    response = add_kvanaveri(data)
+    return response
+
+@app.route('/verbis/kvanaveri/delete', methods=['POST'])
+# DELETE ENTIRE ROW
+def _delete_kvanaveri():
+    data = request.get_json(silent=True)
+    response = delete_kvanaveri(data) # [{pidm}]
+    return response
+
+@app.route('/verbis/kvanaveri/update/<id>', methods=['POST'])
+# UPDATE & DELETE DATACELL
+def _update_kvanaveri(id):
+    data = request.get_json(silent=True)
+    response = update_kvanaveri(id, data)
+    return response
+
+# ****************** MAIN ************************************************
+@app.route('/verbis/kvtalepler', methods=['GET'])
+# GET
+def _get_kvtalepler():
+    response = get_kvtalepler()
+    return response
+
+@app.route('/verbis/kvtalepler/add', methods=['POST'])
+# ADD
+def _add_kvtalepler():
+    data = request.get_json(silent=True)
+    response = add_kvtalepler(data)
+    return response
+
+
+
+
+
+
+
+# ****************** MAIN ************************************************
 if __name__=="__main__":
     app.run(host="0.0.0.0", port=2300, debug=True)
     print("Server started successfully..")

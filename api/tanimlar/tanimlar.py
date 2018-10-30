@@ -5,7 +5,7 @@ from flask import request
 from db.connection import Connect
 from datetime import datetime
 from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar, Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler, TanimlarID, getModel
-from lib.unsal import str2bool
+from api.tanimlar.common import str2bool
 
 
 class Tanimlar():
@@ -50,7 +50,7 @@ class Tanimlar():
                         _json = jsonify(dict)
 
                         if (len(dict) == 0):
-                                return Response("NO DATA found!")
+                                return Response([]) #böyle  [] yapmazsan react tarafında data.map funciton not found hatası alırsın!!
                         else:
                                 return _json
 
@@ -95,9 +95,8 @@ class Tanimlar():
                         _json = jsonify(dict)
 
                         if (len(dict) == 0):
-                                return Response("NO DATA FOUND!")
+                                return Response([])
                         else:
-                                print(_json)
                                 return _json
 
                 except Exception as err:
