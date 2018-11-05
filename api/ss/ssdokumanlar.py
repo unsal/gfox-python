@@ -15,7 +15,7 @@ class SSDokumanlar():
         def __del__(self):
                 self.session.close()
 
-        def getSS(self):
+        def getSS(self, cid):
                 try:
                         dict = []
                         dictDetay = [] # Dokumanlar
@@ -23,12 +23,13 @@ class SSDokumanlar():
                         sql =  """
                                 select pidm birim_pidm, name birim_name
                                 from birimler
-                               """
+                                where cid=%d
+                               """%(cid)
 
                         data = self.session.execute(sql)
 
                         for row in data:
-                                dictDetay = self.getSSDetay(row.birim_pidm)
+                                dictDetay = self.getSSDetay(row.birim_pidm, cid)
                                 dict.append({'birim_pidm':row.birim_pidm ,'birim_name':row.birim_name, 'dokumanlar':dictDetay})
 
                         _json = jsonify(dict)
@@ -42,16 +43,17 @@ class SSDokumanlar():
                         return Response("DB SQL Exception! ",e)
 
 
-        def getSSDetay(self, birim_pidm): #Dokumanlar
+        def getSSDetay(self, birim_pidm, cid): #Dokumanlar
                 try:
                         dict = []
 
                         sql =  """
-                                select ss.pidm pidm, d.name dokuman_name, y.name yayin_name
-                                from ss_dokumanlar ss, dokumanlar d, ss_yayindurumu y
-                                where ss.dokuman_pidm = d.pidm and ss.yayin_pidm = y.pidm and
-                                ss.birim_pidm=%s
-                                """%(birim_pidm)
+                                select ss_dokumanlar.pidm pidm,
+                                        (select dokumanlar.name from dokumanlar where dokumanlar.pidm = ss_dokumanlar.dokuman_pidm limit 1) dokuman_name,
+                                        (select ss_yayindurumu.name from ss_yayindurumu where ss_yayindurumu.pidm = ss_dokumanlar.yayin_pidm limit 1) yayin_name
+                                from ss_dokumanlar
+                                where ss_dokumanlar.birim_pidm=%d and ss_dokumanlar.cid=%d
+                                """%(birim_pidm, cid)
 
                         data = self.session.execute(sql)
 
@@ -76,8 +78,9 @@ class SSDokumanlar():
         def delete(self):
                 try:
                         _pidm = int(self.model.pidm)
+                        _cid = int(self.model.cid)
                         row = self.session.query(
-                        self.model.__class__).filter_by(pidm=_pidm).one()
+                        self.model.__class__).filter_by(pidm=_pidm, cid=_cid).one()
                         self.session.delete(row)
                         self.session.commit()
                         return '', 204
@@ -86,22 +89,25 @@ class SSDokumanlar():
                         return '', 404
 
 
-def getSSDokumanlar():
+def getSSDokumanlar(cid):
     cc = SSDokumanlar(SSDokumanlarModel)
-    return cc.getSS()
+    return cc.getSS(cid)
 
 def addSSDokuman(form):
      _birim_pidm = form.get('birim_pidm')
      _dokuman_pidm = form.get('dokuman_pidm')
      _yayin_pidm = form.get('yayin_pidm')
+     _cid = form.get('cid')
+     _uid = form.get('uid')
 
-     cc=SSDokumanlar(SSDokumanlarModel(birim_pidm=_birim_pidm, dokuman_pidm=_dokuman_pidm, yayin_pidm=_yayin_pidm))
+     cc=SSDokumanlar(SSDokumanlarModel(birim_pidm=_birim_pidm, dokuman_pidm=_dokuman_pidm, yayin_pidm=_yayin_pidm, cid=_cid, uid=_uid))
 
      return cc.add()
 
 def delSSDokuman(form):
     _pidm = form.get('pidm')
+    _cid = form.get('cid')
 
-    cc=SSDokumanlar(SSDokumanlarModel(pidm=_pidm))
+    cc=SSDokumanlar(SSDokumanlarModel(pidm=_pidm, cid=_cid))
 
     return cc.delete()

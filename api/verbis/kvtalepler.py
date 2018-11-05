@@ -23,11 +23,11 @@ class KVTalepler():
 
                         sql =  """
                                select base.pidm, base.isim, base.profiller_data, base.tckno, base.dogumtarihi,
-                                      base.eposta, base.tel, base.incelemedurumu, i.name islemdurumu,
-                                      base.sureuzatma, base.kurumu, base.bilgitalebi, base.timestamp
-                               from kv_talepler base, islem_durumlari i
-                               where base.islemdurumu = i.pidm
-                               order by base.timestamp
+                                        base.eposta, base.tel, base.incelemedurumu,
+                                        (select islem_durumlari.name from islem_durumlari where islem_durumlari.pidm = base.islemdurumu) islemdurumu,
+                                        base.sureuzatma, base.kurumu, base.bilgitalebi, base.timestamp
+                                from kv_talepler base
+                                order by base.timestamp
                                """
 
                         data = self.session.execute(sql)

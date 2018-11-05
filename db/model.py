@@ -1,6 +1,8 @@
 from sqlalchemy import (Column, String, Integer, TIMESTAMP, Boolean, JSON)
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
+from flask import jsonify
+from flask import Response
 
 #_Base tek _ underscore private olduğu ve  dışardan import edilemeyeceği anlamnıa geliyor.
 # tek _ classlar için, __ çifti tanım ve fonksiyonlar için
@@ -12,6 +14,8 @@ class TanimlarBase(object):
     pidm = Column(Integer(), primary_key=True, autoincrement=True)
     name = Column(String(255))
     timestamp = Column(TIMESTAMP, default=datetime.now())
+    cid = Column(Integer())
+    uid = Column(String(60))
 
 class Profiller(TanimlarBase, _Base):
     __tablename__ = 'profiller'
@@ -131,6 +135,8 @@ class SSCommonBase(object):
     pidm = Column(Integer(), primary_key=True)
     birim_pidm = Column(Integer())
     timestamp = Column(TIMESTAMP, default=datetime.now())
+    cid = Column(Integer())
+    uid = Column(String(60))
 
 class SSKurumlarModel(SSCommonBase, _Base):
     __tablename__ = 'ss_kurumlar'
@@ -151,6 +157,8 @@ class SSDokumanlarModel(_Base):
     dokuman_pidm = Column(Integer())
     yayin_pidm = Column(Integer())
     timestamp = Column(TIMESTAMP, default=datetime.now())
+    cid = Column(Integer())
+    uid = Column(String(60))
 
 
 
@@ -160,6 +168,8 @@ class KVBaseModel(object):
     # otomatik oluşturulan alanlar
     pidm = Column(Integer(), primary_key=True)
     timestamp = Column(TIMESTAMP, default=datetime.now())
+    cid = Column(Integer())
+    uid = Column(String(60))
 
 
 class KVProfilModel(KVBaseModel, _Base):
@@ -198,6 +208,9 @@ class KVAnaveriModel(KVBaseModel, _Base):
 class KVTaleplerModel(KVBaseModel, _Base):
     __tablename__='kv_talepleri'
     pidm= Column(Integer(), primary_key=True)
+    timestamp = Column(TIMESTAMP, default=datetime.now())
+    cid = Column(Integer())
+    uid = Column(String(60))
 
     isim = Column(String(60))
     profiller_data = Column(JSON())
@@ -210,15 +223,12 @@ class KVTaleplerModel(KVBaseModel, _Base):
     sureuzatma = Column(Boolean(), default=False)
     kurumu = Column(String(60))
     bilgitalebi = Column(String(255))
-    timestamp = Column(TIMESTAMP, default=datetime.now())
 
-
-
-
-
-
-
-
-
+class ViewAuthModel(_Base):
+    __tablename__='view_auth'
+    pidm = Column(Integer(), primary_key=True) #SQLAlchemt her tabloda primary_key istediği için eklendi
+    uid = Column(String(60))
+    cid = Column(Integer())
+    cid_name = Column(String(60))
 
 

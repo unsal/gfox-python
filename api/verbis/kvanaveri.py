@@ -6,41 +6,38 @@ from api.verbis.kvbase import KVBase
 class KVAnaveri(KVBase):
         def __init__(self,modelClass):
                 KVBase.__init__(self, modelClass)
+                self.model = modelClass
 
         def get(self):
                 try:
-                        dict = []
-
+                        cid = self.model.cid
                         sql =  """
                                select
                                         base.pidm,
-                                        birimler.name birim_name,
-                                        kv.name kv_name,
-                                        sureler.name sure_name,
+                                        (select birimler.name from birimler where birimler.pidm=base.birim_pidm limit 1) birim_name,
+                                        (select kv.name from kv where kv.pidm=base.kv_pidm limit 1) kv_name,
+                                        (select sureler.name from sureler where sureler.pidm=base.sure_pidm limit 1) sure_name,
                                         base.ulkeler_data,
                                         base.kanallar_data,
                                         base.dokumanlar_data,
                                         base.sistemler_data,
                                         base.dayanaklar_data,
                                         base.ortamlar_data
-                                from
-                                        kv_anaveri base, birimler, kv,
-                                        sureler
-                                where
-                                        base.birim_pidm = birimler.pidm and
-                                        base.kv_pidm = kv.pidm and
-                                        base.sure_pidm = sureler.pidm
-                               """
+                                from    kv_anaveri base
+                                where   base.cid = %d
+                               """%(cid)
 
                         data = self.session.execute(sql)
 
+
+                        dict = []
                         for row in data:
-                                ulkelerData = self.createDict('ulkeler', row.ulkeler_data ) #create as json[{pidm, name}]
-                                kanallarData = self.createDict('kanallar', row.kanallar_data )
-                                dokumanlarData = self.createDict('dokumanlar', row.dokumanlar_data )
-                                sistemlerData = self.createDict('sistemler', row.sistemler_data )
-                                dayanaklarData = self.createDict('dayanaklar', row.dayanaklar_data )
-                                ortamlarData = self.createDict('ortamlar', row.ortamlar_data )
+                                ulkelerData = self.createDict('ulkeler', row.ulkeler_data,cid ) #create as json[{pidm, name}]
+                                kanallarData = self.createDict('kanallar', row.kanallar_data ,cid)
+                                dokumanlarData = self.createDict('dokumanlar', row.dokumanlar_data ,cid)
+                                sistemlerData = self.createDict('sistemler', row.sistemler_data,cid )
+                                dayanaklarData = self.createDict('dayanaklar', row.dayanaklar_data,cid)
+                                ortamlarData = self.createDict('ortamlar', row.ortamlar_data ,cid)
 
                                 dict.append({'pidm':row.pidm,
                                                 'birim_name':row.birim_name ,
@@ -65,9 +62,11 @@ class KVAnaveri(KVBase):
                         return Response("KVAnaveri().get() -> DB SQL Exception! ",e)
 
         # kvbase'deki update tek bir data fielde göre çalıştığı için ayrıca eklendi bu..
-        def update(self, id, rowPidm, dataPidms):
+        def update(self, id, rowPidm, dataPidms, uid_):
                 try:
                         row = self.session.query( self.model.__class__).filter_by(pidm=rowPidm).one()
+                        row.uid=uid_
+
                         if (id=='ulkeler'):
                                 row.ulkeler_data = dataPidms
                         elif (id=='kanallar'):
@@ -91,8 +90,8 @@ class KVAnaveri(KVBase):
                         return '', 404
 
 
-def get_kvanaveri():
-    model = KVAnaveriModel()
+def get_kvanaveri(cid_):
+    model = KVAnaveriModel(cid=cid_)
     cc = KVAnaveri(model)
     return cc.get()
 
@@ -102,6 +101,8 @@ def add_kvanaveri(data):
         birimPidm = data.get('birim_pidm')
         kvPidm = data.get('kv_pidm')
         surePidm = data.get('sure_pidm')
+        cid_ = data.get('cid')
+        uid_ = data.get('uid')
 
         ulkelerData = data.get('ulkeler_data')
         kanallarData = data.get('kanallar_data')
@@ -119,7 +120,9 @@ def add_kvanaveri(data):
                                 dokumanlar_data=dokumanlarData,
                                 sistemler_data=sistemlerData,
                                 dayanaklar_data=dayanaklarData,
-                                ortamlar_data=ortamlarData
+                                ortamlar_data=ortamlarData,
+                                cid = cid_,
+                                uid=uid_
                                 )
         cc=KVAnaveri(model)
         return cc.add()
@@ -138,9 +141,10 @@ def update_kvanaveri(id, data):
 
         rowPidm = data.get('pidm')
         dataPidms = data.get('data')
+        uid = data.get('uid')
         model = KVAnaveriModel()
         cc=KVAnaveri(model)
 
-        return cc.update(id, rowPidm, dataPidms)
+        return cc.update(id, rowPidm, dataPidms, uid)
 
 

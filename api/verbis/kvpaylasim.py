@@ -6,37 +6,34 @@ from api.verbis.kvbase import KVBase
 class KVPaylasim(KVBase):
         def __init__(self,modelClass):
                 KVBase.__init__(self, modelClass)
+                self.model = modelClass
 
         def get(self):
 
                 try:
-                        dict = []
+
+                        cid = self.model.cid
 
                         sql =  """
-                                select  base.pidm,
-                                        birimler.name birim_name,
-                                        kv.name kv_name,
-                                        kurumlar.name kurum_name,
+                               select  pidm,
+                                        (select birimler.name from birimler where birimler.pidm=base.birim_pidm limit 1) birim_name,
+                                        (select kv.name from kv where kv.pidm=base.kv_pidm limit 1) kv_name,
+                                        (select kurumlar.name from kurumlar where kurumlar.pidm=base.kurum_pidm limit 1) kurum_name,
                                         base.islemeamaclari_data,
                                         base.paylasimamaclari_data,
                                         base.paylasimsekilleri_data
-                                from    kv_paylasim base, birimler, kv, kurumlar
-                                where   base.birim_pidm=birimler.pidm and
-                                        base.kv_pidm = kv.pidm and
-                                        base.kurum_pidm = kurumlar.pidm
+                                from    kv_paylasim base
+                                where   base.cid=%d
                                 order by base.timestamp desc
-                               """
+                               """%(cid)
 
                         data = self.session.execute(sql)
 
+                        dict = []
                         for row in data:
-                                iaData = self.createDict('isleme_amaclari', row.islemeamaclari_data ) #create as json[{pidm, name}]
-                                paData = self.createDict('paylasim_amaclari', row.paylasimamaclari_data )
-                                psData = self.createDict('paylasim_sekilleri', row.paylasimsekilleri_data )
-                                # str = json.dumps(data)
-                                # print('IA: ',iaData)
-                                # print('PA: ',paData)
-                                # print('PS: ',paylasimSekilleriData)
+                                iaData = self.createDict('isleme_amaclari', row.islemeamaclari_data,cid ) #create as json[{pidm, name}]
+                                paData = self.createDict('paylasim_amaclari', row.paylasimamaclari_data,cid )
+                                psData = self.createDict('paylasim_sekilleri', row.paylasimsekilleri_data,cid )
 
                                 dict.append({'pidm':row.pidm,
                                                 'birim_name':row.birim_name ,
@@ -58,9 +55,11 @@ class KVPaylasim(KVBase):
                         return Response("KVPaylasim().get() -> DB SQL Exception! ",e)
 
         # kvbase'deki update tek bir data fielde göre çalıştığı için ayrıca eklendi bu..
-        def update(self, id, rowPidm, dataPidms):
+        def update(self, id, rowPidm, dataPidms, uid):
                 try:
                         row = self.session.query( self.model.__class__).filter_by(pidm=rowPidm).one()
+
+                        row.uid = uid  #user id update
 
                         if (id=='ia'):
                                 row.islemeamaclari_data = dataPidms
@@ -79,8 +78,9 @@ class KVPaylasim(KVBase):
                         return '', 404
 
 
-def get_kvpaylasim():
-    cc = KVPaylasim(KVPaylasimModel)
+def get_kvpaylasim(cid_):
+    model = KVPaylasimModel(cid=cid_)
+    cc = KVPaylasim(model)
     return cc.get()
 
 
@@ -92,6 +92,8 @@ def add_kvpaylasim(data):
         iaData = data.get('islemeamaclari_data')
         paData = data.get('paylasimamaclari_data')
         paylasimSekilleriData = data.get('paylasimsekilleri_data')
+        cid_ = data.get('cid')
+        uid_ = data.get('uid')
 
         # return ""
         model = KVPaylasimModel(birim_pidm=birimPidm,
@@ -99,7 +101,8 @@ def add_kvpaylasim(data):
                                 kurum_pidm=kurumPidm,
                                 islemeamaclari_data = iaData,
                                 paylasimamaclari_data=paData,
-                                paylasimsekilleri_data=paylasimSekilleriData )
+                                paylasimsekilleri_data=paylasimSekilleriData,
+                                cid=cid_, uid=uid_)
         cc=KVPaylasim(model)
         return cc.add()
 
@@ -109,10 +112,11 @@ def update_kvpaylasim(id, data):
 
         rowPidm = data.get('pidm')
         dataPidms = data.get('data')
+        uid = data.get('uid')
         model = KVPaylasimModel()
         cc=KVPaylasim(model)
 
-        return cc.update(id, rowPidm, dataPidms)
+        return cc.update(id, rowPidm, dataPidms, uid)
 
 def delete_kvpaylasim(data):
   # silinen kv datasını (json) veritabanında günceller

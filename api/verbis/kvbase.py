@@ -15,20 +15,6 @@ class KVBase():
         def __del__(self):
                 self.session.close()
 
-        #çoklu veri hüzrelerinden den (silme ve ekleme) için ortak işlem
-        def _update(self):
-                try:
-                        pidm_ = int(self.model.pidm)
-                        newData = self.model.data
-                        row = self.session.query( self.model.__class__).filter_by(pidm=pidm_).one()
-                        row.data =newData
-                        self.session.commit()
-                        print("Update Successfully")
-                        return '', 204
-                except Exception as err:
-                        print("DB Error on update ", err)
-                        return '', 404
-
         def add(self):
                 try:
                         self.session.add(self.model)
@@ -40,8 +26,17 @@ class KVBase():
                         return Response("Verbis>KVPaylasim>DB Add Exception! ",e)
 
         def update(self):
-                self._update()
-                return '', 204
+                try:
+                        pidm_ = int(self.model.pidm)
+                        newData = self.model.data
+                        row = self.session.query( self.model.__class__).filter_by(pidm=pidm_).one()
+                        row.data =newData
+                        self.session.commit()
+                        print("Update Successfully")
+                        return '', 204
+                except Exception as err:
+                        print("DB Error on update ", err)
+                        return '', 404
 
         #Delete entire row
         def delete(self):
@@ -58,14 +53,14 @@ class KVBase():
                         return '', 404
 
         # for converting json pidm -> names
-        def getPidmName(self, tableName, pidm):
+        def getPidmName(self, tableName, pidm, cid):
                 try:
                         sql =  """
                                 select  {0}.name
                                 from    {0}
-                                where   {0}.pidm={1}
+                                where   {0}.pidm={1} and {0}.cid={2}
                                 limit 1
-                                """.format(tableName, pidm)
+                                """.format(tableName, pidm, cid)
 
                         data = self.session.execute(sql)
                         name = ""
@@ -77,7 +72,7 @@ class KVBase():
                         return "Error!"
 
         # verbis > ekranlarında multiple veriye sahip hücrelere kaynaktan dönen pidmları [{pidm, name}] olarak dönmek için
-        def createDict( self, tableName, data ):
+        def createDict( self, tableName, data, cid ):
         #create dict[pidm, name] from data[pidm]
                 try:
                         dict = []
@@ -85,7 +80,7 @@ class KVBase():
 
                         for item in items:
                                 table_pidm = item
-                                table_name = self.getPidmName(tableName, table_pidm )
+                                table_name = self.getPidmName(tableName, table_pidm ,cid)
                                 dict.append({'pidm':table_pidm, 'name':table_name})
 
                         if (len(dict) == 0):

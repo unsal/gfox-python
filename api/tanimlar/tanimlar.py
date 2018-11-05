@@ -4,7 +4,7 @@ from flask import abort
 from flask import request
 from db.connection import Connect
 from datetime import datetime
-from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar, Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler, TanimlarID, getModel
+from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar, Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler, TanimlarID, getModel, YayinDurumlari
 from api.tanimlar.common import str2bool
 
 
@@ -18,19 +18,23 @@ class Tanimlar():
         def __del__(self):
                 self.session.close()
 
-        def get(self):
+        def get(self, cid_):
                 try:
                         dict = []
 
                         if (self.model == Sistemler):
                                 data = self.session.query(
-                                    self.model.pidm, self.model.name, self.model.local, self.model.timestamp)
+                                    self.model.pidm, self.model.name, self.model.local, self.model.timestamp).filter_by(cid=cid_)
                         elif (self.model == Ulkeler):
                                 data = self.session.query(
-                                    self.model.pidm, self.model.name, self.model.phone_area, self.model.secure, self.model.timestamp)
-                        else:
+                                    self.model.pidm, self.model.name, self.model.phone_area, self.model.secure, self.model.timestamp).filter_by(cid=cid_)
+                        elif (self.model == YayinDurumlari): # myComponent > CreateYayindurumlariOptions için
                                 data = self.session.query(
                                     self.model.pidm, self.model.name, self.model.timestamp)
+                        else:
+                                data = self.session.query(
+                                    self.model.pidm, self.model.name, self.model.timestamp).filter_by(cid=cid_)
+
 
                         data = data.order_by(self.model.name)
 
@@ -57,6 +61,7 @@ class Tanimlar():
                 except Exception as err:
                         return Response("sa query error! ", err)
 
+
         def add(self):
                         self.session.add(self.model)
                         self.session.commit()
@@ -68,8 +73,9 @@ class Tanimlar():
         def delete(self):
                 try:
                         _pidm = int(self.model.pidm)
+                        _cid = int(self.model.cid)
                         row = self.session.query(
-                        self.model.__class__).filter_by(pidm=_pidm).one()
+                        self.model.__class__).filter_by(pidm=_pidm, cid=_cid).one()
                         self.session.delete(row)
                         self.session.commit()
                         print(row.name+" deleted successfully")
@@ -113,37 +119,41 @@ def getNextPidm(id):
     cc = Tanimlar(model)
     return cc.getNextPidm()
 
-def getTanim(id):
+def getTanim(id, cid):
     model = getModel(id)
     cc = Tanimlar(model)
-    return cc.get()
+    return cc.get(cid)
 
 
 def addTanim(form):
     _id = form.get('id')
     _name = form.get('name')
-   # id=kvsistemler.. harici => local
     _local = str2bool(form.get("local"))
-    # Güvenli Ülkeler
     _phone_area = form.get('phone_area')
     _secure = str2bool(form.get('secure'))
+    # auth
+    _cid = form.get('cid')
+    _uid = form.get('uid')
+#     print("cid: ",_cid)
+#     print("uid: ",_uid)
 
     model = getModel(_id)
     if (_id==TanimlarID.GuvenliUlkeler):
-       cc=Tanimlar(model(name=_name, phone_area=_phone_area, secure=_secure))
+       cc=Tanimlar(model(name=_name, phone_area=_phone_area, secure=_secure, cid=_cid, uid=_uid))
     elif (_id==TanimlarID.KVSistemler):
-       cc = Tanimlar(model(name=_name, local=_local))
+       cc = Tanimlar(model(name=_name, local=_local, cid=_cid, uid=_uid))
     else:
-       cc=Tanimlar(model(name=_name))
+       cc=Tanimlar(model(name=_name, cid=_cid, uid=_uid))
 
     return cc.add()
 
 def deleteTanim(form):
     _id = form.get('id')
     _pidm = form.get('pidm')
+    _cid = form.get('cid')
 #     print("Delete Tanım: ",_id,"/",_pidm)
     model = getModel(_id)
-    cc=Tanimlar(model(pidm=_pidm)) # create class
+    cc=Tanimlar(model(pidm=_pidm, cid=_cid)) # create class
     return cc.delete()
 
 

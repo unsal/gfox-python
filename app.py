@@ -11,7 +11,7 @@ from api.verbis.kvprofil import get_kvprofil, add_kvprofil, update_kvprofil, del
 from api.verbis.kvpaylasim import get_kvpaylasim, add_kvpaylasim, update_kvpaylasim, delete_kvpaylasim
 from api.verbis.kvanaveri import get_kvanaveri, add_kvanaveri, delete_kvanaveri, update_kvanaveri
 from api.verbis.kvtalepler import get_kvtalepler, add_kvtalepler
-
+from db.auth import getCids
 
 from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar,Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler
 
@@ -33,10 +33,13 @@ def root():
 
 # TANIMLAR **************************************
 # GET TANIM
-@app.route('/tanimlar/<id>', methods=['GET'])
+@app.route('/tanimlar/<id>', methods=['POST'])
 def _getTanim(id):
-    data = getTanim(id)
-    return data
+        data = request.get_json(silent=True)
+        cid  = data.get('cid')
+        response = getTanim(id, cid)
+        return response
+
 
 # ADD TANIM
 @app.route('/tanimlar/add', methods=['POST'])
@@ -61,10 +64,12 @@ def _getNextPidm(id):
 
 # SS ******************************************************
 # GET COMMON
-@app.route('/ss/common/<id>', methods=['GET'])
+@app.route('/ss/common/<id>', methods=['POST'])
 def _getSSCommon(id):
-    data = getSSCommon(id)
-    return data
+    data = request.get_json(silent=True)
+    cid  = data.get('cid')
+    response = getSSCommon(id, cid)
+    return response
 
 # DEL COMMON
 @app.route('/ss/common/delete', methods=['POST'])
@@ -81,11 +86,13 @@ def _addSSKurum():
     return response
 
 
-# GET SS DOKUMANLAR
-@app.route('/ss/dokumanlar', methods=['GET'])
+# ************* GET SS DOKUMANLAR *******************
+@app.route('/ss/dokumanlar', methods=['POST'])
 def _getSSDokumanlar():
-    data = getSSDokumanlar()
-    return data
+    data = request.get_json(silent=True)
+    cid  = data.get('cid')
+    response = getSSDokumanlar(cid)
+    return response
 
 # ADD SS DOKUMAN
 @app.route('/ss/dokumanlar/add', methods=['POST'])
@@ -104,10 +111,12 @@ def _delSSDokuman():
 
 # ******************** VERBIS ************************************
 #************** KV PROFIL **************************
-@app.route('/verbis/kvprofil', methods=['GET'])
+@app.route('/verbis/kvprofil', methods=['POST'])
 # KVProfil - GET
 def _get_kvprofil():
-    response = get_kvprofil()
+    data = request.get_json(silent=True)
+    cid  = data.get('cid')
+    response = get_kvprofil(cid)
     return response
 
 @app.route('/verbis/kvprofil/add', methods=['POST'])
@@ -131,11 +140,17 @@ def _delete_kvprofil():
     response = delete_kvprofil(data) #data=>full json kvprofil datasıdır
     return response
 
+
+
+
+
 # ****************** KVPAYLASIM ************************************************
-@app.route('/verbis/kvpaylasim', methods=['GET'])
+@app.route('/verbis/kvpaylasim', methods=['POST'])
 # GET
 def _get_kvpaylasim():
-    response = get_kvpaylasim()
+    data = request.get_json(silent=True)
+    cid  = data.get('cid')
+    response = get_kvpaylasim(cid)
     return response
 
 @app.route('/verbis/kvpaylasim/add', methods=['POST'])
@@ -159,11 +174,17 @@ def _delete_kvpaylasim():
     response = delete_kvpaylasim(data) # [{pidm}]
     return response
 
+
+
+
+
 # ****************** KVANAVERI ************************************************
-@app.route('/verbis/kvanaveri', methods=['GET'])
+@app.route('/verbis/kvanaveri', methods=['POST'])
 # GET
 def _get_kvanaveri():
-    response = get_kvanaveri()
+    data = request.get_json(silent=True)
+    cid  = data.get('cid')
+    response = get_kvanaveri(cid)
     return response
 
 @app.route('/verbis/kvanaveri/add', methods=['POST'])
@@ -187,6 +208,9 @@ def _update_kvanaveri(id):
     response = update_kvanaveri(id, data)
     return response
 
+
+
+
 # ****************** MAIN ************************************************
 @app.route('/verbis/kvtalepler', methods=['GET'])
 # GET
@@ -202,7 +226,14 @@ def _add_kvtalepler():
     return response
 
 
-
+# ****************** AUTH ************************************************
+@app.route('/auth/cids', methods=['POST'])
+# GET
+def _getCids():
+    data = request.get_json(silent=True)
+    uid  = data.get('uid')
+    response = getCids(uid)
+    return response
 
 
 

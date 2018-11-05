@@ -15,7 +15,7 @@ class SSCommon():
         def __del__(self):
                 self.session.close()
 
-        def getSS(self):
+        def getSS(self, cid):
                 try:
                         dictBirimler = []
                         dictRelatedItems = []
@@ -23,12 +23,13 @@ class SSCommon():
                         sql =  """
                                 select pidm birim_pidm, name birim_name
                                 from birimler
-                               """
+                                where cid=%d
+                               """%(cid)
 
                         data = self.session.execute(sql)
 
                         for row in data:
-                                dictRelatedItems = self.getSSRelatedItems(row.birim_pidm)
+                                dictRelatedItems = self.getSSRelatedItems(row.birim_pidm, cid)
                                 dictBirimler.append({'birim_pidm':row.birim_pidm ,'birim_name':row.birim_name, 'related_items':dictRelatedItems})
 
                         _json = jsonify(dictBirimler)
@@ -42,33 +43,36 @@ class SSCommon():
                         return Response("DB SQL Exception! ",e)
 
 
-        def getSSRelatedItems(self, birim_pidm): #Paylaşılan Kurumlar
+        def getSSRelatedItems(self, birim_pidm, cid): #Paylaşılan Kurumlar
                 try:
                         dictRelatedItems = []
 
                         # related_item_pidm ve name react tarafında tek olarak yazılan ortak common component içindir.
                         sqlKurumlar =  """
-                                select ss.pidm pidm, k.pidm related_item_pidm, k.name related_item_name
-                                from ss_kurumlar ss, kurumlar k
-                                where ss.kurum_pidm = k.pidm and
-                                ss.birim_pidm=%s
-                                """%(birim_pidm)
+                                select ss_kurumlar.pidm,
+                                        (select kurumlar.pidm from kurumlar where kurumlar.pidm = ss_kurumlar.kurum_pidm limit 1) related_item_pidm,
+                                        (select kurumlar.name from kurumlar where kurumlar.pidm = ss_kurumlar.kurum_pidm limit 1) related_item_name,
+                                from ss_kurumlar
+                                where ss_kurumlar.birim_pidm=%d and ss_kurumlar.acid=%d
+                                """%(birim_pidm, cid)
 
                         # Kullanılan Sistmler
                         sqlSistemler =  """
-                                select ss.pidm pidm, s.pidm related_item_pidm, s.name related_item_name
-                                from ss_kullanilan_sistemler ss, sistemler s
-                                where ss.sistem_pidm = s.pidm and
-                                ss.birim_pidm=%s
-                                """%(birim_pidm)
+                                select ss_kullanilan_sistemler.pidm,
+                                        (select sistemler.pidm from sistemler where sistemler.pidm = ss_kullanilan_sistemler.sistem_pidm limit 1) related_item_pidm,
+                                        (select sistemler.name from sistemler where sistemler.pidm = ss_kullanilan_sistemler.sistem_pidm limit 1) related_item_name
+                                from ss_kullanilan_sistemler
+                                where ss_kullanilan_sistemler.birim_pidm=%d and ss_kullanilan_sistemler.cid=%d
+                                """%(birim_pidm, cid)
 
                         # Toplama Kanalları
                         sqlKanallar =  """
-                                select ss.pidm pidm, k.pidm related_item_pidm, k.name related_item_name
-                                from ss_toplama_kanallari ss, kanallar k
-                                where ss.kanal_pidm = k.pidm and
-                                ss.birim_pidm=%s
-                                """%(birim_pidm)
+                                select ss_toplama_kanallari.pidm,
+                                        (select kanallar.pidm from kanallar where kanallar.pidm = ss_toplama_kanallari.kanal_pidm limit 1) related_item_pidm,
+                                        (select kanallar.name from kanallar where kanallar.pidm = ss_toplama_kanallari.kanal_pidm limit 1) related_item_name
+                                from ss_toplama_kanallari
+                                where ss_toplama_kanallari.birim_pidm=%d and ss_toplama_kanallari.cid=%d
+                                """%(birim_pidm,cid)
 
                         if (self.model == SSKurumlarModel):
                                 sql = sqlKurumlar
@@ -104,8 +108,9 @@ class SSCommon():
         def delete(self):
                 try:
                         _pidm = int(self.model.pidm)
+                        _cid = int(self.model.cid)
                         row = self.session.query(
-                        self.model.__class__).filter_by(pidm=_pidm).one()
+                        self.model.__class__).filter_by(pidm=_pidm, cid=_cid).one()
                         self.session.delete(row)
                         self.session.commit()
                         print("DEL Successfully")
@@ -115,7 +120,7 @@ class SSCommon():
                         return '', 404
 
 
-def getSSCommon(id):
+def getSSCommon(id, cid):
     if (id=='kurumlar'):
        cc = SSCommon(SSKurumlarModel)
     elif (id=='sistemler'):
@@ -125,18 +130,21 @@ def getSSCommon(id):
     else:
        cc = "str object"
 
-    return cc.getSS()
+    return cc.getSS(cid)
 
 def deleteSSCommon(form):
     _id = form.get('id').strip() # trim..
     _pidm = form.get('pidm')
+    _cid = form.get('cid')
+
+    print('id: ',_id,'pidm: ', _pidm,'cid: ',_cid)
 
     if (_id=='kurumlar'):
-        cc=SSCommon(SSKurumlarModel(pidm=_pidm))
+        cc=SSCommon(SSKurumlarModel(pidm=_pidm, cid=_cid))
     elif (_id=='sistemler'):
-        cc=SSCommon(SSSistemlerModel(pidm=_pidm))
+        cc=SSCommon(SSSistemlerModel(pidm=_pidm, cid=_cid))
     elif (_id=='kanallar'):
-        cc=SSCommon(SSKanallarModel(pidm=_pidm))
+        cc=SSCommon(SSKanallarModel(pidm=_pidm, cid=_cid))
     else:
         cc="str object" # value'nun özel bir anlamı yok, debugtaki hata buraya düşerse anla diye
 
@@ -149,13 +157,15 @@ def addSSCommon(form):
      _id =  form.get('id')
      _birim_pidm = form.get('birim_pidm')
      _related_item_pidm = form.get('related_item_pidm')
+     _cid=form.get('cid')
+     _uid=form.get('uid')
 
      if (_id=='kurumlar'):
-         cc = SSCommon(SSKurumlarModel(birim_pidm=_birim_pidm, kurum_pidm=_related_item_pidm))
+         cc = SSCommon(SSKurumlarModel(birim_pidm=_birim_pidm, kurum_pidm=_related_item_pidm, cid=_cid, uid=_uid))
      elif (_id=='sistemler'):
-        cc=SSCommon(SSSistemlerModel(birim_pidm=_birim_pidm, sistem_pidm = _related_item_pidm))
+        cc=SSCommon(SSSistemlerModel(birim_pidm=_birim_pidm, sistem_pidm = _related_item_pidm, cid=_cid, uid=_uid))
      elif (_id=='kanallar'):
-        cc=SSCommon(SSKanallarModel(birim_pidm=_birim_pidm, kanal_pidm = _related_item_pidm))
+        cc=SSCommon(SSKanallarModel(birim_pidm=_birim_pidm, kanal_pidm = _related_item_pidm, cid=_cid, uid=_uid))
      else:
         cc="str object" # value'nun özel bir anlamı yok, debugtaki hata buraya düşerse anla diye
 
