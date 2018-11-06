@@ -2,28 +2,26 @@ from flask import Response
 from flask import jsonify
 from db.model import KVProfilModel
 from api.verbis.kvbase import KVBase
+from db.connection import Connect
+from array import array
 
 class KVProfil(KVBase):
-        def __init__(self,modelClass):
-                KVBase.__init__(self, modelClass)
-                self.model = modelClass
+        def __init__(self,model):
+                KVBase.__init__(self, model)
+                # self.model = model
 
-        def get(self):
+        def get(self, cid):
                 try:
-                        cid = self.model.cid
-                        dict = []
-
                         sql =  """
-                                select  base.pidm,
-                                        (select profiller.name from profiller where profiller.pidm = base.profil_pidm limit 1) profil_name,
-                                        (select birimler.name from birimler where birimler.pidm =  base.birim_pidm limit 1) birim_name,
-                                        base.data
-                                from    kv_profil base
-                                where   base.cid = %d
+                                select  pidm, profil_name, birim_name,data
+                                from    view_kvprofil
+                                where   cid=%d
+                                order by timestamp desc
                                """%(cid)
 
                         data = self.session.execute(sql)
 
+                        dict = []
                         for row in data:
                                 kvData = self.createDict('kv',row.data, cid)
                                 # str = json.dumps(data)
@@ -31,20 +29,19 @@ class KVProfil(KVBase):
 
                         _json = jsonify(dict)
 
+                        print('json: ', _json)
                         if (len(dict) == 0):
                                 return Response([])
                         else:
                                 return _json
 
                 except Exception as e:
-                        return Response("KVProfil().get() -> DB SQL Exception! ",e)
+                        return Response("KVProfil().get2() -> SQLAlchemy Exception! ",e)
 
 
-def get_kvprofil(cid_):
-    model = KVProfilModel(cid=cid_)
-    cc=KVProfil(model)
-    return cc.get()
-
+def get_kvprofil(cid):
+    cc=KVProfil(KVProfilModel)
+    return cc.get(cid)
 
 def add_kvprofil(data):
 

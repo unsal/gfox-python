@@ -48,11 +48,11 @@ class SSDokumanlar():
                         dict = []
 
                         sql =  """
-                                select ss_dokumanlar.pidm pidm,
-                                        (select dokumanlar.name from dokumanlar where dokumanlar.pidm = ss_dokumanlar.dokuman_pidm limit 1) dokuman_name,
-                                        (select ss_yayindurumu.name from ss_yayindurumu where ss_yayindurumu.pidm = ss_dokumanlar.yayin_pidm limit 1) yayin_name
-                                from ss_dokumanlar
-                                where ss_dokumanlar.birim_pidm=%d and ss_dokumanlar.cid=%d
+                                select  pidm,
+                                        dokuman_name,
+                                        yayin_name
+                                from view_ssdokumanlar
+                                where birim_pidm=%d and cid=%d
                                 """%(birim_pidm, cid)
 
                         data = self.session.execute(sql)

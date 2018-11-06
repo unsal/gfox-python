@@ -22,13 +22,14 @@ class ViewAuth():
 
     def getCids(self):
         try:
-                data = self.session.query( self.model.cid, self.model.cid_name).filter_by(uid=self.model.uid)
+                data = self.session.query(self.model).filter_by(uid=self.model.uid)
                 data = data.order_by(self.model.cid_name)
 
                 dict = []
                 for row in data:
                         dict.append( {'cid': row.cid, 'name': row.cid_name} )
 
+                # print('dict: ', dict)
                 _json = jsonify(dict)
 
                 if (len(dict) == 0):
@@ -38,6 +39,7 @@ class ViewAuth():
 
         except Exception as err:
                 return Response("*** Error! *** ViewAuth->getCids Exception!! ", err)
+
 
 def getCids(uid):
     cc = ViewAuth(uid)

@@ -49,30 +49,37 @@ class SSCommon():
 
                         # related_item_pidm ve name react tarafında tek olarak yazılan ortak common component içindir.
                         sqlKurumlar =  """
-                                select ss_kurumlar.pidm,
-                                        (select kurumlar.pidm from kurumlar where kurumlar.pidm = ss_kurumlar.kurum_pidm limit 1) related_item_pidm,
-                                        (select kurumlar.name from kurumlar where kurumlar.pidm = ss_kurumlar.kurum_pidm limit 1) related_item_name,
-                                from ss_kurumlar
-                                where ss_kurumlar.birim_pidm=%d and ss_kurumlar.acid=%d
+                                select pidm,
+                                       related_item_pidm,
+                                       related_item_name
+                                from view_sskurumlar
+                                where birim_pidm=%d and cid=%d
                                 """%(birim_pidm, cid)
+                        # sqlKurumlar =  """
+                        #         select ss_kurumlar.pidm,
+                        #                 (select kurumlar.pidm from kurumlar where kurumlar.pidm = ss_kurumlar.kurum_pidm limit 1) related_item_pidm,
+                        #                 (select kurumlar.name from kurumlar where kurumlar.pidm = ss_kurumlar.kurum_pidm limit 1) related_item_name,
+                        #         from ss_kurumlar
+                        #         where ss_kurumlar.birim_pidm=%d and ss_kurumlar.cid=%d
+                        #         """%(birim_pidm, cid)
 
                         # Kullanılan Sistmler
                         sqlSistemler =  """
-                                select ss_kullanilan_sistemler.pidm,
-                                        (select sistemler.pidm from sistemler where sistemler.pidm = ss_kullanilan_sistemler.sistem_pidm limit 1) related_item_pidm,
-                                        (select sistemler.name from sistemler where sistemler.pidm = ss_kullanilan_sistemler.sistem_pidm limit 1) related_item_name
-                                from ss_kullanilan_sistemler
-                                where ss_kullanilan_sistemler.birim_pidm=%d and ss_kullanilan_sistemler.cid=%d
+                                select pidm,
+                                       related_item_pidm,
+                                       related_item_name
+                                from view_sssistemler
+                                where birim_pidm=%d and cid=%d
                                 """%(birim_pidm, cid)
 
                         # Toplama Kanalları
-                        sqlKanallar =  """
-                                select ss_toplama_kanallari.pidm,
-                                        (select kanallar.pidm from kanallar where kanallar.pidm = ss_toplama_kanallari.kanal_pidm limit 1) related_item_pidm,
-                                        (select kanallar.name from kanallar where kanallar.pidm = ss_toplama_kanallari.kanal_pidm limit 1) related_item_name
-                                from ss_toplama_kanallari
-                                where ss_toplama_kanallari.birim_pidm=%d and ss_toplama_kanallari.cid=%d
-                                """%(birim_pidm,cid)
+                        sqlKanallar = """
+                                select pidm,
+                                       related_item_pidm,
+                                       related_item_name
+                                from view_kanallar
+                                where birim_pidm=%d and cid=%d
+                                """%(birim_pidm, cid)
 
                         if (self.model == SSKurumlarModel):
                                 sql = sqlKurumlar

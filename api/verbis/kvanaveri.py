@@ -4,27 +4,16 @@ from db.model import KVAnaveriModel
 from api.verbis.kvbase import KVBase
 
 class KVAnaveri(KVBase):
-        def __init__(self,modelClass):
-                KVBase.__init__(self, modelClass)
-                self.model = modelClass
+        def __init__(self,model):
+                KVBase.__init__(self, model)
+                # self.model = modelClass
 
-        def get(self):
+        def get(self, cid):
                 try:
-                        cid = self.model.cid
                         sql =  """
-                               select
-                                        base.pidm,
-                                        (select birimler.name from birimler where birimler.pidm=base.birim_pidm limit 1) birim_name,
-                                        (select kv.name from kv where kv.pidm=base.kv_pidm limit 1) kv_name,
-                                        (select sureler.name from sureler where sureler.pidm=base.sure_pidm limit 1) sure_name,
-                                        base.ulkeler_data,
-                                        base.kanallar_data,
-                                        base.dokumanlar_data,
-                                        base.sistemler_data,
-                                        base.dayanaklar_data,
-                                        base.ortamlar_data
-                                from    kv_anaveri base
-                                where   base.cid = %d
+                                select pidm, birim_name, kv_name, sure_name, ulkeler_data, kanallar_data, dokumanlar_data, sistemler_data, dayanaklar_data, ortamlar_data
+                                from    view_kvanaveri
+                                where   cid = %d
                                """%(cid)
 
                         data = self.session.execute(sql)
@@ -90,10 +79,9 @@ class KVAnaveri(KVBase):
                         return '', 404
 
 
-def get_kvanaveri(cid_):
-    model = KVAnaveriModel(cid=cid_)
-    cc = KVAnaveri(model)
-    return cc.get()
+def get_kvanaveri(cid):
+    cc = KVAnaveri(KVAnaveriModel)
+    return cc.get(cid)
 
 
 def add_kvanaveri(data):

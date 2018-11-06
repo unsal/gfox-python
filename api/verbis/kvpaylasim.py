@@ -4,27 +4,18 @@ from db.model import KVPaylasimModel
 from api.verbis.kvbase import KVBase
 
 class KVPaylasim(KVBase):
-        def __init__(self,modelClass):
-                KVBase.__init__(self, modelClass)
-                self.model = modelClass
+        def __init__(self,model):
+                KVBase.__init__(self, model)
+                # self.model = modelClass
 
-        def get(self):
+        def get(self, cid):
 
                 try:
-
-                        cid = self.model.cid
-
                         sql =  """
-                               select  pidm,
-                                        (select birimler.name from birimler where birimler.pidm=base.birim_pidm limit 1) birim_name,
-                                        (select kv.name from kv where kv.pidm=base.kv_pidm limit 1) kv_name,
-                                        (select kurumlar.name from kurumlar where kurumlar.pidm=base.kurum_pidm limit 1) kurum_name,
-                                        base.islemeamaclari_data,
-                                        base.paylasimamaclari_data,
-                                        base.paylasimsekilleri_data
-                                from    kv_paylasim base
-                                where   base.cid=%d
-                                order by base.timestamp desc
+                                select  pidm, birim_name, kv_name, kurum_name, islemeamaclari_data, paylasimamaclari_data, paylasimsekilleri_data
+                                from    view_kvpaylasim
+                                where   cid=%d
+                                order by timestamp desc
                                """%(cid)
 
                         data = self.session.execute(sql)
@@ -77,11 +68,9 @@ class KVPaylasim(KVBase):
                         print("DB Error on kvpaylasim->update ", err)
                         return '', 404
 
-
-def get_kvpaylasim(cid_):
-    model = KVPaylasimModel(cid=cid_)
-    cc = KVPaylasim(model)
-    return cc.get()
+def get_kvpaylasim(cid):
+    cc = KVPaylasim(KVPaylasimModel)
+    return cc.get(cid)
 
 
 def add_kvpaylasim(data):

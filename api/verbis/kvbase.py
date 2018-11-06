@@ -7,10 +7,10 @@ import json
 from array import array
 
 class KVBase():
-        def __init__(self,modelClass):
+        def __init__(self,model):
                 self.conn = Connect()
                 self.session = self.conn.session()
-                self.model = modelClass
+                self.model = model
 
         def __del__(self):
                 self.session.close()

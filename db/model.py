@@ -226,9 +226,7 @@ class KVTaleplerModel(KVBaseModel, _Base):
 
 class ViewAuthModel(_Base):
     __tablename__='view_auth'
-    pidm = Column(Integer(), primary_key=True) #SQLAlchemt her tabloda primary_key istediği için eklendi
-    uid = Column(String(60))
-    cid = Column(Integer())
-    cid_name = Column(String(60))
-
-
+    pidm        = Column('pidm',Integer(), primary_key=True) #SQLAlchemt her tabloda primary_key istediği için eklendi
+    uid         = Column('uid',String(60))
+    cid         = Column('cid',Integer())
+    cid_name    = Column('cid_name',String(60))
