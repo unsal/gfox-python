@@ -224,9 +224,18 @@ class KVTaleplerModel(KVBaseModel, _Base):
     kurumu = Column(String(60))
     bilgitalebi = Column(String(255))
 
-class ViewAuthModel(_Base):
+class AuthModel(_Base):
     __tablename__='view_auth'
     pidm        = Column('pidm',Integer(), primary_key=True) #SQLAlchemt her tabloda primary_key istediği için eklendi
     uid         = Column('uid',String(60))
     cid         = Column('cid',Integer())
     cid_name    = Column('cid_name',String(60))
+
+class AuthLoginModel(_Base):
+    __tablename__='auth_login'
+    uid         = Column('uid',String(60), primary_key=True)
+    pwd         = Column('pwd', String(255))
+    admin       = Column('admin',Boolean(), default=False)
+    timestamp = Column(TIMESTAMP, default=datetime.now())
+
+

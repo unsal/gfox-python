@@ -7,23 +7,22 @@ from flask import request
 from db.connection import Connect
 import json
 from array import array
-from db.model import ViewAuthModel
+from db.model import AuthModel, AuthLoginModel
 
 
-class ViewAuth():
-    def __init__(self, uid):
+class Auth():
+    def __init__(self):
                 self.conn = Connect()
                 self.session = self.conn.session()
-                self.model =  ViewAuthModel
-                self.model.uid = uid
 
     def __del__(self):
                 self.session.close()
 
-    def getCids(self):
+    def getCids(self, uid):
         try:
-                data = self.session.query(self.model).filter_by(uid=self.model.uid)
-                data = data.order_by(self.model.cid_name)
+                model = AuthModel
+                data = self.session.query(model).filter_by(uid=uid)
+                data = data.order_by(model.cid_name)
 
                 dict = []
                 for row in data:
@@ -40,7 +39,32 @@ class ViewAuth():
         except Exception as err:
                 return Response("*** Error! *** ViewAuth->getCids Exception!! ", err)
 
+    def login(self, uid, pwd):
+          try:
+                model = AuthLoginModel
+                data = self.session.query(model).filter_by(uid=uid, pwd=pwd)
+
+                dict = []
+
+                for row in data:
+                        dict.append( {'token': row.uid} )
+
+                # print('dict: ', dict)
+                _json = jsonify(dict)
+
+                if (len(dict) == 0):
+                        return Response([])
+                else:
+                        return _json
+
+          except Exception as err:
+                return Response("*** Error! *** Login Exception!! ", err)
+
 
 def getCids(uid):
-    cc = ViewAuth(uid)
-    return cc.getCids()
+    cc = Auth()
+    return cc.getCids(uid)
+
+def login(uid, pwd):
+    cc = Auth()
+    return cc.login(uid, pwd)

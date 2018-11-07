@@ -11,7 +11,7 @@ from api.verbis.kvprofil import get_kvprofil, add_kvprofil, update_kvprofil, del
 from api.verbis.kvpaylasim import get_kvpaylasim, add_kvpaylasim, update_kvpaylasim, delete_kvpaylasim
 from api.verbis.kvanaveri import get_kvanaveri, add_kvanaveri, delete_kvanaveri, update_kvanaveri
 from api.verbis.kvtalepler import get_kvtalepler, add_kvtalepler
-from db.auth import getCids
+from db.auth import getCids, login
 
 from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar,Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler
 
@@ -209,8 +209,6 @@ def _update_kvanaveri(id):
     return response
 
 
-
-
 # ****************** MAIN ************************************************
 @app.route('/verbis/kvtalepler', methods=['GET'])
 # GET
@@ -233,6 +231,14 @@ def _getCids():
     data = request.get_json(silent=True)
     uid  = data.get('uid')
     response = getCids(uid)
+    return response
+
+@app.route('/auth/login', methods=['POST'])
+def _login():
+    data = request.get_json(silent=True)
+    uid  = data.get('uid')
+    pwd  = data.get('pwd')
+    response = login(uid, pwd)
     return response
 
 
