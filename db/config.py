@@ -7,7 +7,16 @@ class ConfigLocal:
         PASSWORD = "Qaz1wsx2!"
 
 class ConfigAWS:
-        HOST = "gfoxdb.cnyxtuppiqxw.eu-west-1.rds.amazonaws.com"
+        HOST = "mydbinstance.cnyxtuppiqxw.eu-west-1.rds.amazonaws.com"
         DATABASE = "gfox"
-        USER = "gfoxadmin"
+        USER = "gfox"
         PASSWORD = "Qaz1wsx2!"
+
+# class ConfigGCP:
+#         HOST = "35.205.60.74"
+#         DATABASE = "gfox"
+#         USER = "gfox"
+#         PASSWORD = "Qaz1wsx2!"
+
+class ConfigJWT:
+        SECRETKEY = 'f8ab9dbb04441f985ff81985ea14a0c0'

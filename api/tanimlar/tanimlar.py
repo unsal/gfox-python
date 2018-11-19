@@ -7,7 +7,6 @@ from datetime import datetime
 from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar, Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler, TanimlarID, getModel, YayinDurumlari
 from api.tanimlar.common import str2bool
 
-
 class Tanimlar():
         def __init__(self, modelClass):
                 self.conn = Connect()
@@ -78,7 +77,7 @@ class Tanimlar():
                         self.model.__class__).filter_by(pidm=_pidm, cid=_cid).one()
                         self.session.delete(row)
                         self.session.commit()
-                        print(row.name+" deleted successfully")
+                        print(" deleted successfully")
                         return '', 204
                 except Exception as err:
                         print("DB Error on deleting ", err)

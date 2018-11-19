@@ -8,7 +8,8 @@ from db.connection import Connect
 import json
 from array import array
 from db.model import AuthModel, AuthLoginModel
-
+import jwt
+from db.config import ConfigJWT
 
 class Auth():
     def __init__(self):
@@ -31,6 +32,8 @@ class Auth():
                 # print('dict: ', dict)
                 _json = jsonify(dict)
 
+                print('dict: ', dict)
+
                 if (len(dict) == 0):
                         return Response([])
                 else:
@@ -41,15 +44,19 @@ class Auth():
 
     def login(self, uid, pwd):
           try:
+
                 model = AuthLoginModel
                 data = self.session.query(model).filter_by(uid=uid, pwd=pwd)
 
                 dict = []
 
+                # JWT Token
                 for row in data:
-                        dict.append( {'token': row.uid} )
+                        payload = { "uid": row.uid, "admin": "false"}
+                        secretKey = ConfigJWT.SECRETKEY
+                        signature = jwt.encode(payload, secretKey, algorithm='HS256').decode('utf-8')
+                        dict.append( {'token': signature} )
 
-                # print('dict: ', dict)
                 _json = jsonify(dict)
 
                 if (len(dict) == 0):

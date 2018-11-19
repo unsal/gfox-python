@@ -17,7 +17,15 @@ from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemle
 
 from flask_cors import CORS
 
+#concurrent requestler için en altta main de
+from gevent.pywsgi import WSGIServer
+import logging
+# logging.basicConfig()
+
 app = Flask(__name__)
+
+logger = logging.getLogger('gunicorn.error')
+
 
 # TR karakterler \n\bbn\a vb. ascii olarak basmaası iin
 app.config['JSON_AS_ASCII'] = False
@@ -238,16 +246,28 @@ def _login():
     data = request.get_json(silent=True)
     uid  = data.get('uid')
     pwd  = data.get('pwd')
+#     logger.info('uid: '+uid)
     response = login(uid, pwd)
+
     return response
-
-
 
 
 # ****************** MAIN ************************************************
 if __name__=="__main__":
-    app.run(host="0.0.0.0", port=2300, debug=True)
+#     app.run(host="127.0.0.1", port=8000, debug=True, threaded=True)
+    app.run(host="127.0.0.1", port=8000, debug=True)
     print("Server started successfully..")
+
+# concurrent requestler için:
+        # app.debug = True
+        # http_server = WSGIServer(('', 8000), app)
+        # http_server.serve_forever()
+
+
+
+
+
+
 
 
 

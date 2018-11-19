@@ -77,7 +77,7 @@ class SSCommon():
                                 select pidm,
                                        related_item_pidm,
                                        related_item_name
-                                from view_kanallar
+                                from view_sskanallar
                                 where birim_pidm=%d and cid=%d
                                 """%(birim_pidm, cid)
 
