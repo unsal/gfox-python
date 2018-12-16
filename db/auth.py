@@ -32,7 +32,7 @@ class Auth():
                 # print('dict: ', dict)
                 _json = jsonify(dict)
 
-                print('dict: ', dict)
+                # print('dict: ', dict)
 
                 if (len(dict) == 0):
                         return Response([])

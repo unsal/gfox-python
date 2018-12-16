@@ -5,3 +5,8 @@ html dizini: /opt/bitnami/nginx/html
 ssh:
 ssh bitnami@3.121.86.174 -i privatekey.pem
 
+installs
+------------
+sudo pip3 install openpyxl
+
+

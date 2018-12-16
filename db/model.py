@@ -70,6 +70,9 @@ class YayinDurumlari(TanimlarBase, _Base):
 class IslemDurumlari(TanimlarBase, _Base):
     __tablename__ = 'islem_durumlari'
 
+class Tedbirler(TanimlarBase, _Base):
+    __tablename__ = 'tedbirler'
+
 
 # react tarafından post edilen ID'leri tek noktadan kolayca yönetebilmek için yazıldı.
 class TanimlarID():
@@ -89,6 +92,7 @@ class TanimlarID():
       GuvenliUlkeler = "ulkeler"
       YayinDurumlari = "yayindurumlari"
       IslemDurumlari = "islemdurumlari"
+      Tedbirler = "tedbirler"
 
 def getModel(id):
     if (id == TanimlarID.Profiller):
@@ -123,6 +127,8 @@ def getModel(id):
             model = YayinDurumlari
     elif (id==TanimlarID.IslemDurumlari):
             model = IslemDurumlari
+    elif (id==TanimlarID.Tedbirler):
+            model = Tedbirler
     else:
             model = None
 
@@ -203,6 +209,7 @@ class KVAnaveriModel(KVBaseModel, _Base):
     sistemler_data= Column(JSON()) #dokuman_pidms
     dayanaklar_data = Column(JSON()) #sistem_pidms
     ortamlar_data = Column(JSON())
+    tedbirler_data = Column(JSON())
 
 # *******************  KV TALEPLERI  ********************
 class KVTaleplerModel(KVBaseModel, _Base):
@@ -237,5 +244,66 @@ class AuthLoginModel(_Base):
     pwd         = Column('pwd', String(255))
     admin       = Column('admin',Boolean(), default=False)
     timestamp = Column(TIMESTAMP, default=datetime.now())
+
+
+# VIEW MODELS PART
+class ViewKVProfilModel(_Base):
+    __tablename__ = 'view_kvprofil'
+    # yazilimdan geleceklre
+    pidm        = Column('pidm',Integer(), primary_key=True)
+    cid         = Column('cid',Integer())
+    profil_name = Column(String(255))
+    birim_name  = Column(String(255))
+    data = Column(JSON())
+    timestamp = Column(TIMESTAMP)
+
+class ViewKVPaylasimModel(_Base):
+    __tablename__ = 'view_kvpaylasim'
+    # yazilimdan geleceklre
+    pidm        = Column('pidm',Integer(), primary_key=True)
+    cid         = Column('cid',Integer())
+    birim_name = Column(String(255))
+    kv_name  = Column(String(255))
+    kurum_name  = Column(String(255))
+    islemeamaclari_data = Column(JSON())
+    paylasimamaclari_data = Column(JSON())
+    paylasimsekilleri_data = Column(JSON())
+    timestamp = Column(TIMESTAMP)
+
+class ViewKVAnaveriModel(_Base):
+    __tablename__ = 'view_kvanaveri'
+    # yazilimdan geleceklre
+    pidm        = Column('pidm',Integer(), primary_key=True)
+    cid         = Column('cid',Integer())
+    birim_name = Column(String(255))
+    kv_name  = Column(String(255))
+    sure_name  = Column(String(255))
+    ulkeler_data = Column(JSON())
+    kanallar_data = Column(JSON())
+    dokumanlar_data = Column(JSON())
+    sistemler_data = Column(JSON())
+    dayanaklar_data = Column(JSON())
+    ortamlar_data = Column(JSON())
+    tedbirler_data = Column(JSON())
+    timestamp = Column(TIMESTAMP)
+
+
+class ModelBolumler(_Base):
+    __tablename__ = 'bolumler'
+    pidm = Column(Integer(), primary_key=True)
+    name = Column(String(255))
+    birim_pidm = Column(Integer())
+    timestamp = Column(TIMESTAMP, default=datetime.now())
+    cid = Column(Integer())
+    uid = Column(String(60))
+
+class ModelViewBolumler(_Base):
+    __tablename__ = 'view_bolumler'
+    birim_pidm = Column(Integer(), primary_key=True)
+    birim_name = Column(String(255))
+    bolumler_data = Column(JSON())
+    cid = Column(Integer())
+    uid = Column(String(60))
+
 
 

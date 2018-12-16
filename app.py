@@ -12,6 +12,8 @@ from api.verbis.kvpaylasim import get_kvpaylasim, add_kvpaylasim, update_kvpayla
 from api.verbis.kvanaveri import get_kvanaveri, add_kvanaveri, delete_kvanaveri, update_kvanaveri
 from api.verbis.kvtalepler import get_kvtalepler, add_kvtalepler
 from db.auth import getCids, login
+from api.export import downloadExcel
+from api.tanimlar.bolumler import getBolumler, addBolum, deleteBolum
 
 from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar,Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler
 
@@ -148,10 +150,6 @@ def _delete_kvprofil():
     response = delete_kvprofil(data) #data=>full json kvprofil datasıdır
     return response
 
-
-
-
-
 # ****************** KVPAYLASIM ************************************************
 @app.route('/verbis/kvpaylasim', methods=['POST'])
 # GET
@@ -181,10 +179,6 @@ def _delete_kvpaylasim():
     data = request.get_json(silent=True)
     response = delete_kvpaylasim(data) # [{pidm}]
     return response
-
-
-
-
 
 # ****************** KVANAVERI ************************************************
 @app.route('/verbis/kvanaveri', methods=['POST'])
@@ -251,6 +245,37 @@ def _login():
 
     return response
 
+# ****************** EXCEL ************************************************
+@app.route('/download', methods=['POST'])
+def _export():
+    data = request.get_json(silent=True)
+    cid  = data.get('cid')
+    response = downloadExcel(cid)
+    return response
+
+#************** BOLUMLER **************************
+@app.route('/tanimlar/bolumler', methods=['POST'])
+def _getBolumler():
+    data = request.get_json(silent=True)
+    cid  = data.get('cid')
+    response = getBolumler(cid)
+    return response
+
+# ADD
+@app.route('/tanimlar/bolumler/add', methods=['POST'])
+def _addBolumler():
+    data = request.get_json(silent=True)
+    response = addBolum(data)
+    return response
+
+# DEL
+@app.route('/tanimlar/bolumler/delete', methods=['POST'])
+def _deleteBolum():
+    data = request.get_json(silent=True)
+    response = deleteBolum(data)
+    return response
+
+
 
 # ****************** MAIN ************************************************
 if __name__=="__main__":
@@ -262,6 +287,10 @@ if __name__=="__main__":
         # app.debug = True
         # http_server = WSGIServer(('', 8000), app)
         # http_server.serve_forever()
+
+
+
+
 
 
 

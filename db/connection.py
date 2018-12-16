@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 app = Flask(__name__)
 
-app.config.from_object('db.config.ConfigAWS') #Local db
+app.config.from_object('db.config.ConfigLocal') #Local db
 
 class Connect:
     def __init__(self):

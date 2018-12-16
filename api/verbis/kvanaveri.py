@@ -11,7 +11,7 @@ class KVAnaveri(KVBase):
         def get(self, cid):
                 try:
                         sql =  """
-                                select pidm, birim_name, kv_name, sure_name, ulkeler_data, kanallar_data, dokumanlar_data, sistemler_data, dayanaklar_data, ortamlar_data
+                                select pidm, birim_name, kv_name, sure_name, ulkeler_data, kanallar_data, dokumanlar_data, sistemler_data, dayanaklar_data, ortamlar_data, tedbirler_data
                                 from    view_kvanaveri
                                 where   cid = %d
                                """%(cid)
@@ -27,6 +27,7 @@ class KVAnaveri(KVBase):
                                 sistemlerData = self.createDict('sistemler', row.sistemler_data,cid )
                                 dayanaklarData = self.createDict('dayanaklar', row.dayanaklar_data,cid)
                                 ortamlarData = self.createDict('ortamlar', row.ortamlar_data ,cid)
+                                tedbirlerData = self.createDict('tedbirler', row.tedbirler_data ,cid)
 
                                 dict.append({'pidm':row.pidm,
                                                 'birim_name':row.birim_name ,
@@ -37,8 +38,11 @@ class KVAnaveri(KVBase):
                                                 'dokumanlar_data':dokumanlarData,
                                                 'sistemler_data':sistemlerData,
                                                 'dayanaklar_data':dayanaklarData,
-                                                'ortamlar_data':ortamlarData
+                                                'ortamlar_data':ortamlarData,
+                                                'tedbirler_data':tedbirlerData,
                                         })
+
+                                print(row.birim_name)
 
                         _json = jsonify(dict)
 
@@ -68,6 +72,8 @@ class KVAnaveri(KVBase):
                                 row.dayanaklar_data = dataPidms
                         elif (id=='ortamlar'):
                                 row.ortamlar_data = dataPidms
+                        elif (id=='tedbirler'):
+                                row.tedbirler_data = dataPidms
                         else:
                                 return None
 
@@ -98,6 +104,7 @@ def add_kvanaveri(data):
         sistemlerData = data.get('sistemler_data')
         dayanaklarData = data.get('dayanaklar_data')
         ortamlarData = data.get('ortamlar_data')
+        tedbirlerData = data.get('tedbirler_data')
 
         # return ""
         model = KVAnaveriModel(birim_pidm=birimPidm,
@@ -109,6 +116,7 @@ def add_kvanaveri(data):
                                 sistemler_data=sistemlerData,
                                 dayanaklar_data=dayanaklarData,
                                 ortamlar_data=ortamlarData,
+                                tedbirler_data=tedbirlerData,
                                 cid = cid_,
                                 uid=uid_
                                 )
