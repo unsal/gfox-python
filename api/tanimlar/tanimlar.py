@@ -4,7 +4,7 @@ from flask import abort
 from flask import request
 from db.connection import Connect
 from datetime import datetime
-from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar, Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler, TanimlarID, getModel, YayinDurumlari
+from db.model import *
 from api.tanimlar.common import str2bool
 
 class Tanimlar():
@@ -21,7 +21,13 @@ class Tanimlar():
                 try:
                         dict = []
 
-                        if (self.model == Sistemler):
+                        if (self.model==KV):
+                                self.model=ModelViewKV
+
+                        if (self.model == ModelViewKV):
+                                data = self.session.query(
+                                    self.model.pidm, self.model.name, self.model.kategori_name).filter_by(cid=cid_)
+                        elif (self.model == Sistemler):
                                 data = self.session.query(
                                     self.model.pidm, self.model.name, self.model.local, self.model.timestamp).filter_by(cid=cid_)
                         elif (self.model == Ulkeler):
@@ -34,12 +40,13 @@ class Tanimlar():
                                 data = self.session.query(
                                     self.model.pidm, self.model.name, self.model.timestamp).filter_by(cid=cid_)
 
-
                         data = data.order_by(self.model.name)
 
                         for row in data:
-
-                                if (self.model == Sistemler):
+                                if (self.model == ModelViewKV):
+                                        dict.append(
+                                            {'pidm': row.pidm, 'name': row.name, 'kategori_name':row.kategori_name})
+                                elif (self.model == Sistemler):
                                         dict.append(
                                             {'pidm': row.pidm, 'name': row.name, 'local': row.local, 'timestamp': row.timestamp})
                                 elif (self.model == Ulkeler):
@@ -48,6 +55,7 @@ class Tanimlar():
                                 else:
                                         dict.append(
                                             {'pidm': row.pidm, 'name': row.name, 'timestamp': row.timestamp})
+
 
                         # _json = jsonify({"Tanimlar":dict})
                         _json = jsonify(dict)
@@ -83,40 +91,24 @@ class Tanimlar():
                         print("DB Error on deleting ", err)
                         return '', 404
 
-        def getNextPidm(self):
+        def getTanimName(self, pidm_, cid_):
                 try:
                         dict = []
 
-                        sql =  """
-                                select nextval('sistemler_pidm_seq') pidm from gfox.public.sistemler limit 1
-                                """
-
-                        data = self.session.execute(sql)
+                        data = self.session.query(self.model.name).filter_by(pidm=pidm_, cid=cid_)
 
                         for row in data:
-                                dict.append({'pidm':row.pidm})
-                                # bu fonksiyonun her çağırılışı db de değeri 2 arttırır.
+                                dict.append({'name': row.name})
 
                         _json = jsonify(dict)
 
                         if (len(dict) == 0):
-                                return Response([])
+                                return Response([]) #böyle  [] yapmazsan react tarafında data.map funciton not found hatası alırsın!!
                         else:
                                 return _json
 
                 except Exception as err:
-                        print("getNextPidm Query Error",err)
-                        return '',404
-
-
-# def addTanim(modelClass):
-#         cc=Tanimlar(modelClass) # create class
-#         return cc.add()
-
-def getNextPidm(id):
-    model = getModel(id)
-    cc = Tanimlar(model)
-    return cc.getNextPidm()
+                        return Response("getTanimName query error! ", err)
 
 def getTanim(id, cid):
     model = getModel(id)
@@ -130,6 +122,7 @@ def addTanim(form):
     _local = str2bool(form.get("local"))
     _phone_area = form.get('phone_area')
     _secure = str2bool(form.get('secure'))
+    _kategori = form.get('kategori')
     # auth
     _cid = form.get('cid')
     _uid = form.get('uid')
@@ -139,6 +132,8 @@ def addTanim(form):
     model = getModel(_id)
     if (_id==TanimlarID.GuvenliUlkeler):
        cc=Tanimlar(model(name=_name, phone_area=_phone_area, secure=_secure, cid=_cid, uid=_uid))
+    elif (_id==TanimlarID.KV):
+       cc = Tanimlar(model(name=_name, kv_kategoriler_pidm=_kategori, cid=_cid, uid=_uid))
     elif (_id==TanimlarID.KVSistemler):
        cc = Tanimlar(model(name=_name, local=_local, cid=_cid, uid=_uid))
     else:
@@ -154,6 +149,12 @@ def deleteTanim(form):
     model = getModel(_id)
     cc=Tanimlar(model(pidm=_pidm, cid=_cid)) # create class
     return cc.delete()
+
+#Anaveriler için
+def getTanimName(id, pidm, cid):
+    model = getModel(id)
+    cc = Tanimlar(model)
+    return cc.getTanimName(pidm, cid)
 
 
 # if __name__ == "__main__":

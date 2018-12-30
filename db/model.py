@@ -25,6 +25,10 @@ class Birimler(TanimlarBase, _Base):
 
 class KV(TanimlarBase, _Base):
     __tablename__ = 'kv'
+    kv_kategoriler_pidm = Column(Integer())
+
+class KVKategoriler(TanimlarBase, _Base):
+    __tablename__ = 'kv_kategoriler'
 
 class IslemeAmaclari(TanimlarBase, _Base):
     __tablename__ = 'isleme_amaclari'
@@ -84,6 +88,7 @@ class TanimlarID():
       ToplamaKanallari = "kanallar"
       Kurumlar = "kurumlar"
       KV = "kv"
+      KVKategoriler = "kvkategoriler"
       ArsivOrtamlari = "ortamlar"
       PaylasimAmaclari = "paylasimamaclari"
       PaylasimSekilleri = "paylasimsekilleri"
@@ -109,6 +114,8 @@ def getModel(id):
             model = Kanallar
     elif (id==TanimlarID.KV):
             model = KV
+    elif (id==TanimlarID.KVKategoriler):
+            model = KVKategoriler
     elif (id==TanimlarID.ArsivOrtamlari):
             model = Ortamlar
     elif (id==TanimlarID.KVSistemler):
@@ -288,6 +295,7 @@ class ViewKVAnaveriModel(_Base):
     timestamp = Column(TIMESTAMP)
 
 
+# BOLUMLER -----------------------------------------------
 class ModelBolumler(_Base):
     __tablename__ = 'bolumler'
     pidm = Column(Integer(), primary_key=True)
@@ -304,6 +312,69 @@ class ModelViewBolumler(_Base):
     bolumler_data = Column(JSON())
     cid = Column(Integer())
     uid = Column(String(60))
+
+# SURECLER -----------------------------------------------
+class ModelSurecler(_Base):
+    __tablename__ = 'surecler'
+    pidm = Column(Integer(), primary_key=True)
+    name = Column(String(255))
+    bolum_pidm = Column(Integer())
+    cid = Column(Integer())
+    uid = Column(String(60))
+
+class ModelViewSurecler(_Base):
+    __tablename__ = 'view_surecler'
+    birim_name = Column(String(255))
+    bolum_name = Column(String(255))
+    bolum_pidm = Column(Integer(), primary_key=True)
+    surecler_data = Column(JSON())
+    cid = Column(Integer())
+    uid = Column(String(60))
+
+#KV -------------------------------------------
+class ModelViewKV(_Base):
+    __tablename__ = 'view_kv'
+    pidm = Column(Integer(), primary_key=True)
+    name = Column(String(255))
+    kategori_name = Column(String(255))
+    cid = Column(Integer())
+    uid = Column(String(60))
+
+#KV -------------------------------------------
+class ModelAnaveriler(_Base):
+    __tablename__ = 'anaveriler'
+    pidm = Column(Integer(), primary_key=True)
+    profil_pidm = Column(Integer())
+    surec_pidm = Column(Integer())
+    kv_pidm = Column(Integer())
+    sure_pidm = Column(Integer())
+    kanal_pidm = Column(Integer())
+    sistem_pidm = Column(Integer())
+    dayanak_pidm = Column(Integer())
+    isleme_amaclari_pidm = Column(Integer())
+    ortamlar_data = Column(JSON())
+    tedbirler_data = Column(JSON())
+    cid = Column(Integer())
+    uid = Column(String(60))
+
+class ModelViewAnaveriler(_Base):
+    __tablename__ = 'view_anaveriler'
+    pidm = Column(Integer(), primary_key=True)
+    profil_name = Column(String(255))
+    surec_name = Column(String(255))
+    kv_name = Column(String(255))
+    sure_name = Column(String(255))
+    kanal_name = Column(String(255))
+    sistem_name = Column(String(255))
+    dayanak_name = Column(String(255))
+    isleme_amaclari_name = Column(String(255))
+    ortamlar_data = Column(JSON())
+    tedbirler_data = Column(JSON())
+    cid = Column(Integer())
+    uid = Column(String(60))
+
+
+
 
 
 

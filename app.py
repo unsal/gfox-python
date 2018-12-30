@@ -4,18 +4,20 @@ from flask import request
 import json
 
 # API
-from api.tanimlar.tanimlar import getTanim, addTanim, deleteTanim, getNextPidm
-from api.ss.ssdokumanlar import getSSDokumanlar, addSSDokuman, delSSDokuman
-from api.ss.sscommon import getSSCommon, deleteSSCommon, addSSCommon
-from api.verbis.kvprofil import get_kvprofil, add_kvprofil, update_kvprofil, delete_kvprofil
-from api.verbis.kvpaylasim import get_kvpaylasim, add_kvpaylasim, update_kvpaylasim, delete_kvpaylasim
-from api.verbis.kvanaveri import get_kvanaveri, add_kvanaveri, delete_kvanaveri, update_kvanaveri
-from api.verbis.kvtalepler import get_kvtalepler, add_kvtalepler
+from api.tanimlar.tanimlar import *
+from api.ss.ssdokumanlar import *
+from api.ss.sscommon import *
+from api.verbis.kvprofil import *
+from api.verbis.kvpaylasim import *
+from api.verbis.kvanaveri import *
+from api.verbis.kvtalepler import *
 from db.auth import getCids, login
 from api.export import downloadExcel
-from api.tanimlar.bolumler import getBolumler, addBolum, deleteBolum
+from api.tanimlar.bolumler import *
+from api.tanimlar.surecler import *
+from api.ozdilek.anaveriler import *
 
-from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar,Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler
+from db.model import *
 
 from flask_cors import CORS
 
@@ -66,11 +68,16 @@ def _deleteTanim():
     response = deleteTanim(_form)
     return response
 
-# Get Next Pidm
-@app.route('/tanimlar/pidm/<id>', methods=['GET'])
-def _getNextPidm(id):
-    data = getNextPidm(id)
-    return data
+# Get Tanim Name for pidm. Anaveriler için
+@app.route('/tanimlar/name', methods=['POST'])
+def _getTanimName():
+    data = request.get_json(silent=True)
+    id  = data.get('id')
+    pidm  = data.get('pidm')
+    cid  = data.get('cid')
+
+    response = getTanimName(id, pidm, cid)
+    return response
 
 # SS ******************************************************
 # GET COMMON
@@ -273,6 +280,51 @@ def _addBolumler():
 def _deleteBolum():
     data = request.get_json(silent=True)
     response = deleteBolum(data)
+    return response
+
+#************** SURECLER **************************
+@app.route('/tanimlar/surecler', methods=['POST'])
+def _getSurecler():
+    data = request.get_json(silent=True)
+    cid  = data.get('cid')
+    response = getSurecler(cid)
+    return response
+
+# 4dropdown
+@app.route('/tanimlar/sureclerdd', methods=['POST'])
+def _getSureclerDropdown():
+    data = request.get_json(silent=True)
+    cid  = data.get('cid')
+    response = getDropdownSurecler(cid)
+    return response
+
+@app.route('/tanimlar/surecler/add', methods=['POST'])
+def _addSurecler():
+    data = request.get_json(silent=True)
+    response = addSurec(data)
+    return response
+
+@app.route('/tanimlar/surecler/delete', methods=['POST'])
+def _deleteSurec():
+    data = request.get_json(silent=True)
+    response = deleteSurec(data)
+    return response
+
+
+
+#************** ANAVERILER **************************
+@app.route('/verbis/anaveriler', methods=['POST'])
+def _getAnaveriler():
+    data = request.get_json(silent=True)
+    cid  = data.get('cid')
+    response = getAnaveriler(cid)
+    return response
+
+# UPDATE ANAVERI CELLSS -> ORTAMLAR, TEDBIRLER
+@app.route('/verbis/anaveriler/update', methods=['POST'])
+def _updateAnaveriler():
+    data = request.get_json(silent=True)
+    response = updateAnaveriler(data)
     return response
 
 

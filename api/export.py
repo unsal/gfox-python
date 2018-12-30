@@ -5,7 +5,7 @@ from flask import send_file
 
 from db.connection import Connect
 from datetime import datetime
-from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar, Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler, TanimlarID, getModel, YayinDurumlari, ViewKVProfilModel, ViewKVPaylasimModel, ViewKVAnaveriModel
+from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar, Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler, getModel, YayinDurumlari, ViewKVProfilModel, ViewKVPaylasimModel, ViewKVAnaveriModel
 from api.tanimlar.common import str2bool
 import json
 

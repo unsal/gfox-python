@@ -4,10 +4,10 @@ from flask import request
 import json
 
 # API
-from api.tanimlar.tanimlar import getTanim, addTanim, deleteTanim, getNextPidm
-from api.ss.ssdokumanlar import getSSDokumanlar, addSSDokuman, delSSDokuman
-from api.ss.sscommon import getSSCommon, deleteSSCommon, addSSCommon
-from api.verbis.kvprofil import get_kvprofil, add_kvprofil, update_kvprofil, delete_kvprofil
+from api.tanimlar.tanimlar import *
+from api.ss.ssdokumanlar import *
+from api.ss.sscommon import *
+from api.verbis.kvprofil import *
 from api.verbis.kvpaylasim import get_kvpaylasim, add_kvpaylasim, update_kvpaylasim, delete_kvpaylasim
 from api.verbis.kvanaveri import get_kvanaveri, add_kvanaveri, delete_kvanaveri, update_kvanaveri
 from api.verbis.kvtalepler import get_kvtalepler, add_kvtalepler
@@ -55,12 +55,6 @@ def _deleteTanim():
     _form = request.form
     response = deleteTanim(_form)
     return response
-
-# Get Next Pidm
-@app.route('/tanimlar/pidm/<id>', methods=['GET'])
-def _getNextPidm(id):
-    data = getNextPidm(id)
-    return data
 
 # SS ******************************************************
 # GET COMMON

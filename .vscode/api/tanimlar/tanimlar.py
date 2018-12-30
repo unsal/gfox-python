@@ -83,40 +83,10 @@ class Tanimlar():
                         print("DB Error on deleting ", err)
                         return '', 404
 
-        def getNextPidm(self):
-                try:
-                        dict = []
-
-                        sql =  """
-                                select nextval('sistemler_pidm_seq') pidm from gfox.public.sistemler limit 1
-                                """
-
-                        data = self.session.execute(sql)
-
-                        for row in data:
-                                dict.append({'pidm':row.pidm})
-                                # bu fonksiyonun her çağırılışı db de değeri 2 arttırır.
-
-                        _json = jsonify(dict)
-
-                        if (len(dict) == 0):
-                                return Response([])
-                        else:
-                                return _json
-
-                except Exception as err:
-                        print("getNextPidm Query Error",err)
-                        return '',404
-
 
 # def addTanim(modelClass):
 #         cc=Tanimlar(modelClass) # create class
 #         return cc.add()
-
-def getNextPidm(id):
-    model = getModel(id)
-    cc = Tanimlar(model)
-    return cc.getNextPidm()
 
 def getTanim(id, cid):
     model = getModel(id)
