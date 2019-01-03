@@ -27,14 +27,31 @@ class Anaveriler(KVBase):
                                 tedbirlerData = self.createDict('tedbirler', row.tedbirler_data, cid_)
                                 dict.append({
                                         'pidm': row.pidm,
+
+                                        'profil_pidm': row.profil_pidm,
                                         'profil_name': row.profil_name,
+
+                                        'surec_pidm': row.surec_pidm,
                                         'surec_name': row.surec_name,
+
+                                        'kv_pidm': row.kv_pidm,
                                         'kv_name': row.kv_name,
+
+                                        'sure_pidm': row.sure_pidm,
                                         'sure_name': row.sure_name,
+
+                                        'kanal_pidm': row.kanal_pidm,
                                         'kanal_name': row.kanal_name,
+
+                                        'sistem_pidm':row.sistem_pidm,
                                         'sistem_name': row.sistem_name,
+
+                                        'dayanak_pidm':row.dayanak_pidm,
                                         'dayanak_name':row.dayanak_name,
+
+                                        'isleme_amaclari_pidm': row.isleme_amaclari_pidm,
                                         'isleme_amaclari_name':row.isleme_amaclari_name,
+
                                         'ortamlar_data':ortamlarData,
                                         'tedbirler_data':tedbirlerData
                                 })
@@ -89,3 +106,34 @@ def updateAnaveriler(data):
     cc = Anaveriler(model)
 
     return cc.update(id, pidm, datacell, cid, uid)
+
+def addAnaveriler(data):
+    profilPidm = data.get('profil_pidm')
+    surecPidm =  data.get('surec_pidm')
+    kvPidm =  data.get('kv_pidm')
+    surePidm =  data.get('sure_pidm')
+    kanalPidm =  data.get('kanal_pidm')
+    sistemPidm =  data.get('sistem_pidm')
+    dayanakPidm =  data.get('dayanak_pidm')
+    islemeAmaclariPidm =  data.get('isleme_amaclari_pidm')
+    ortamlarData =  data.get('ortamlar_data')
+    tedbirlerData =  data.get('tedbirler_data')
+    cid_ = data.get('cid')
+    uid_ = data.get('uid')
+
+    model = ModelAnaveriler(profil_pidm = profilPidm,
+                surec_pidm=surecPidm,
+                kv_pidm=kvPidm,
+                sure_pidm=surePidm,
+                kanal_pidm=kanalPidm,
+                sistem_pidm = sistemPidm,
+                dayanak_pidm = dayanakPidm,
+                isleme_amaclari_pidm = islemeAmaclariPidm,
+                ortamlar_data = ortamlarData,
+                tedbirler_data = tedbirlerData,
+                cid = cid_,
+                uid=uid_
+                )
+    cc = Anaveriler(model)
+
+    return cc.add()

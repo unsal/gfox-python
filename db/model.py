@@ -356,22 +356,45 @@ class ModelAnaveriler(_Base):
     tedbirler_data = Column(JSON())
     cid = Column(Integer())
     uid = Column(String(60))
+    timestamp = Column(TIMESTAMP, default=datetime.now())
 
 class ModelViewAnaveriler(_Base):
     __tablename__ = 'view_anaveriler'
     pidm = Column(Integer(), primary_key=True)
+
+    profil_pidm = Column(Integer())
     profil_name = Column(String(255))
+
+    surec_pidm = Column(Integer())
     surec_name = Column(String(255))
+
+    kv_pidm = Column(Integer())
     kv_name = Column(String(255))
+
+    sure_pidm = Column(Integer())
     sure_name = Column(String(255))
+
+    kanal_pidm = Column(Integer())
     kanal_name = Column(String(255))
+
+    sistem_pidm = Column(Integer())
     sistem_name = Column(String(255))
+
+    dayanak_pidm = Column(Integer())
     dayanak_name = Column(String(255))
+
+    isleme_amaclari_pidm = Column(Integer())
     isleme_amaclari_name = Column(String(255))
+
     ortamlar_data = Column(JSON())
     tedbirler_data = Column(JSON())
+
     cid = Column(Integer())
     uid = Column(String(60))
+
+    timestamp = Column(TIMESTAMP, default=datetime.now())
+
+
 
 
 

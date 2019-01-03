@@ -327,6 +327,12 @@ def _updateAnaveriler():
     response = updateAnaveriler(data)
     return response
 
+# ADD ANAVERI
+@app.route('/verbis/anaveriler/add', methods=['POST'])
+def _addAnaveriler():
+    data = request.get_json(silent=True)
+    response = addAnaveriler(data)
+    return response
 
 
 # ****************** MAIN ************************************************
