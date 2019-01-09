@@ -347,11 +347,12 @@ class ModelAnaveriler(_Base):
     profil_pidm = Column(Integer())
     surec_pidm = Column(Integer())
     kv_pidm = Column(Integer())
+
     sure_pidm = Column(Integer())
-    kanal_pidm = Column(Integer())
-    sistem_pidm = Column(Integer())
-    dayanak_pidm = Column(Integer())
-    isleme_amaclari_pidm = Column(Integer())
+    kanallar_data = Column(JSON())
+    sistemler_data = Column(JSON())
+    dayanaklar_data = Column(JSON())
+    isleme_amaclari_data = Column(JSON())
     ortamlar_data = Column(JSON())
     tedbirler_data = Column(JSON())
     cid = Column(Integer())
@@ -361,38 +362,64 @@ class ModelAnaveriler(_Base):
 class ModelViewAnaveriler(_Base):
     __tablename__ = 'view_anaveriler'
     pidm = Column(Integer(), primary_key=True)
-
     profil_pidm = Column(Integer())
     profil_name = Column(String(255))
-
     surec_pidm = Column(Integer())
     surec_name = Column(String(255))
-
     kv_pidm = Column(Integer())
     kv_name = Column(String(255))
-
     sure_pidm = Column(Integer())
     sure_name = Column(String(255))
-
-    kanal_pidm = Column(Integer())
-    kanal_name = Column(String(255))
-
-    sistem_pidm = Column(Integer())
-    sistem_name = Column(String(255))
-
-    dayanak_pidm = Column(Integer())
-    dayanak_name = Column(String(255))
-
-    isleme_amaclari_pidm = Column(Integer())
-    isleme_amaclari_name = Column(String(255))
-
+    kanallar_data = Column(JSON())
+    sistemler_data = Column(JSON())
+    dayanaklar_data = Column(JSON())
+    isleme_amaclari_data = Column(JSON())
     ortamlar_data = Column(JSON())
     tedbirler_data = Column(JSON())
-
     cid = Column(Integer())
     uid = Column(String(60))
+    timestamp = Column(TIMESTAMP)
 
+
+#KV -------------------------------------------
+class ModelAktarimlar(_Base):
+    __tablename__ = 'aktarimlar'
+    pidm = Column(Integer(), primary_key=True)
+    surec_pidm = Column(Integer())
+    kv_pidm = Column(Integer())
+    kurum_pidm = Column(Integer())
+
+    ulkeler_data = Column(JSON())
+    dayanaklar_data = Column(JSON())
+    paylasim_amaclari_data = Column(JSON())
+    paylasim_sekilleri_data = Column(JSON())
+    yurtdisi = Column(Boolean())
+    aciklama = Column(String(255))
+    bilgiveren = Column(String(255))
+    cid = Column(Integer())
+    uid = Column(String(60))
     timestamp = Column(TIMESTAMP, default=datetime.now())
+
+class ModelViewAktarimlar(_Base):
+    __tablename__ = 'view_aktarimlar'
+    pidm = Column(Integer(), primary_key=True)
+    surec_pidm = Column(Integer())
+    surec_name = Column(String(255))
+    kv_pidm = Column(Integer())
+    kv_name = Column(String(255))
+    kurum_pidm = Column(Integer())
+    kurum_name = Column(String(255))
+
+    ulkeler_data = Column(JSON())
+    dayanaklar_data = Column(JSON())
+    paylasim_amaclari_data = Column(JSON())
+    paylasim_sekilleri_data = Column(JSON())
+    yurtdisi = Column(Boolean())
+    aciklama = Column(String(255))
+    bilgiveren = Column(String(60))
+    cid = Column(Integer())
+    uid = Column(String(60))
+    timestamp = Column(TIMESTAMP)
 
 
 

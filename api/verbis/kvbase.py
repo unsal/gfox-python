@@ -23,7 +23,7 @@ class KVBase():
                         return '', 204
 
                 except Exception as e:
-                        return Response("Verbis>KVPaylasim>DB Add Exception! ",e)
+                        return Response("kvbase > add > exception error!",e)
 
         def update(self):
                 try:
@@ -76,7 +76,7 @@ class KVBase():
         #create dict[pidm, name] from data[pidm]
                 try:
                         dict = []
-                        items = array('i', data)
+                        items = array('i', data) #array as integer 'i'
 
                         for item in items:
                                 table_pidm = item

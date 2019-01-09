@@ -16,6 +16,7 @@ from api.export import downloadExcel
 from api.tanimlar.bolumler import *
 from api.tanimlar.surecler import *
 from api.ozdilek.anaveriler import *
+from api.ozdilek.aktarimlar import *
 
 from db.model import *
 
@@ -311,27 +312,38 @@ def _deleteSurec():
     return response
 
 
-
 #************** ANAVERILER **************************
-@app.route('/verbis/anaveriler', methods=['POST'])
-def _getAnaveriler():
-    data = request.get_json(silent=True)
-    cid  = data.get('cid')
-    response = getAnaveriler(cid)
+@app.route('/verbis/anaveriler/<id>', methods=['POST'])
+def anaveriler(id):
+    params = request.get_json(silent=True)
+    if (id=="get"):
+        response = getAnaveriler(params)
+    elif (id=="add"):
+        response = addAnaveriler(params)
+    elif (id=="update"):
+        response = updateAnaveriler(params)
+    elif (id=="delete"):
+        response = deleteAnaveriler(params)
+    else:
+        response = Response("anaveriler error! ")
+
     return response
 
-# UPDATE ANAVERI CELLSS -> ORTAMLAR, TEDBIRLER
-@app.route('/verbis/anaveriler/update', methods=['POST'])
-def _updateAnaveriler():
-    data = request.get_json(silent=True)
-    response = updateAnaveriler(data)
-    return response
+#************** AKTARIMLAR **************************
+@app.route('/verbis/aktarimlar/<id>', methods=['POST'])
+def aktarimlar(id):
+    params = request.get_json(silent=True)
+    if (id=="get"):
+        response = getAktarimlar(params)
+    elif (id=="add"):
+        response = addAktarimlar(params)
+    elif (id=="update"):
+        response = updateAktarimlar(params)
+    elif (id=="delete"):
+        response = deleteAktarimlar(params)
+    else:
+        response = Response("Aktarimlar error! ")
 
-# ADD ANAVERI
-@app.route('/verbis/anaveriler/add', methods=['POST'])
-def _addAnaveriler():
-    data = request.get_json(silent=True)
-    response = addAnaveriler(data)
     return response
 
 

@@ -9,7 +9,7 @@ from api.tanimlar.common import str2bool
 from api.verbis.kvbase import KVBase
 
 #Temel connect, session, add, delete, getpidmname ve createdict için KVBase referans alındı...
-class Anaveriler(KVBase):
+class Aktarimlar(KVBase):
         def __init__(self, model):
                 KVBase.__init__(self, model)
 
@@ -24,35 +24,27 @@ class Anaveriler(KVBase):
                         data = self.session.query(self.model).filter_by(cid=cid_)
 
                         for row in data:
-
-                                kanallarData = self.createDict('kanallar', row.kanallar_data, cid_)
-                                sistemlerData = self.createDict('sistemler', row.sistemler_data, cid_)
+                                ulkelerData = self.createDict('ulkeler', row.ulkeler_data, cid_)
                                 dayanaklarData = self.createDict('dayanaklar', row.dayanaklar_data, cid_)
-                                islemeAmaclariData = self.createDict('isleme_amaclari', row.isleme_amaclari_data, cid_)
-                                ortamlarData = self.createDict('ortamlar', row.ortamlar_data, cid_)
-                                tedbirlerData = self.createDict('tedbirler', row.tedbirler_data, cid_)
+                                paylasimAmaclariData = self.createDict('paylasim_amaclari', row.paylasim_amaclari_data, cid_)
+                                paylasimSekilleriData = self.createDict('paylasim_sekilleri', row.paylasim_sekilleri_data, cid_)
 
                                 dict.append({
                                         'pidm': row.pidm,
-
-                                        'profil_pidm': row.profil_pidm,
-                                        'profil_name': row.profil_name,
-
                                         'surec_pidm': row.surec_pidm,
                                         'surec_name': row.surec_name,
-
                                         'kv_pidm': row.kv_pidm,
                                         'kv_name': row.kv_name,
+                                        'kurum_pidm': row.kurum_pidm,
+                                        'kurum_name': row.kurum_name,
 
-                                        'sure_pidm': row.sure_pidm,
-                                        'sure_name': row.sure_name,
-
-                                        'kanallar_data':kanallarData,
-                                        'sistemler_data':sistemlerData,
+                                        'ulkeler_data':ulkelerData,
                                         'dayanaklar_data':dayanaklarData,
-                                        'isleme_amaclari_data':islemeAmaclariData,
-                                        'ortamlar_data':ortamlarData,
-                                        'tedbirler_data':tedbirlerData
+                                        'paylasim_amaclari_data':paylasimAmaclariData,
+                                        'paylasim_sekilleri_data':paylasimSekilleriData,
+                                        'yurtdisi':row.yurtdisi,
+                                        'aciklama':row.aciklama,
+                                        'bilgiveren':row.bilgiveren
                                 })
 
                         _json = jsonify(dict)
@@ -63,20 +55,21 @@ class Anaveriler(KVBase):
                                 return _json
 
                 except Exception as err:
-                        return Response("anaveriler get query error! ", err)
+                        return Response("****** ERROR ***********  aktarimlar get query error! ******** ", err)
 
         def add(self, params):
                 try:
-                        self.model.profil_pidm = params.get('profil_pidm')
                         self.model.surec_pidm = params.get('surec_pidm')
                         self.model.kv_pidm = params.get('kv_pidm')
-                        self.model.sure_pidm =  params.get('sure_pidm')
-                        self.model.kanallar_data = params.get('kanallar_data')
-                        self.model.sistemler_data = params.get('sistemler_data')
-                        self.model.dayanaklar_data = params.get('dayanaklar_data')
-                        self.model.isleme_amaclari_data = params.get('isleme_amaclari_data')
-                        self.model.ortamlar_data = params.get('ortamlar_data')
-                        self.model.tedbirler_data = params.get('tedbirler_data')
+                        self.model.kurum_pidm =  params.get('kurum_pidm')
+                        self.model.ulkeler_data = params.get('ulkeler_data')
+                        self.model.dayanaklar_data = params.get('sistemler_data')
+                        self.model.paylasim_amaclari_data = params.get('paylasim_amaclari_data')
+                        self.model.paylasim_sekilleri_data = params.get('paylasim_sekilleri_data')
+
+                        self.model.yurtdisi = params.get('yurtdisi')
+                        self.model.aciklama = params.get('aciklama')
+                        self.model.bilgiveren = params.get('bilgiveren')
                         self.model.cid = params.get('cid')
                         self.model.uid = params.get('uid')
 
@@ -98,16 +91,16 @@ class Anaveriler(KVBase):
                         cid_ = params.get('cid')
                         row = self.session.query(self.model).filter_by( pidm=pidm_, cid=cid_).one()
 
-                        row.profil_pidm = params.get('profil_pidm')
                         row.surec_pidm = params.get('surec_pidm')
                         row.kv_pidm = params.get('kv_pidm')
-                        row.sure_pidm = params.get('sure_pidm')
-                        row.kanallar_data = params.get('kanallar_data')
-                        row.sistemler_data = params.get('sistemler_data')
+                        row.kurum_pidm = params.get('kurum_pidm')
+                        row.ulkeler_data = params.get('ulkeler_data')
                         row.dayanaklar_data = params.get('dayanaklar_data')
-                        row.isleme_amaclari_data = params.get('isleme_amaclari_data')
-                        row.ortamlar_data = params.get('ortamlar_data')
-                        row.tedbirler_data = params.get('tedbirler_data')
+                        row.paylasim_amaclari_data = params.get('paylasim_amaclari_data')
+                        row.paylasim_sekilleri_data = params.get('paylasim_sekilleri_data')
+                        row.yurtdisi = params.get('yurtdisi')
+                        row.aciklama = params.get('aciklama')
+                        row.bilgiveren = params.get('bilgiveren')
                         row.uid = params.get('uid')
 
                         timestamp = datetime.today()
@@ -136,18 +129,18 @@ class Anaveriler(KVBase):
 
 
 
-def getAnaveriler(params):
-    cc = Anaveriler(ModelViewAnaveriler)
+def getAktarimlar(params):
+    cc = Aktarimlar(ModelViewAktarimlar)
     return cc.get(params)
 
-def updateAnaveriler(params):
-    cc = Anaveriler(ModelAnaveriler)
+def updateAktarimlar(params):
+    cc = Aktarimlar(ModelAktarimlar)
     return cc.update(params)
 
-def deleteAnaveriler(params):
-    cc = Anaveriler(ModelAnaveriler)
+def deleteAktarimlar(params):
+    cc = Aktarimlar(ModelAktarimlar)
     return cc.delete(params)
 
-def addAnaveriler(params):
-    cc = Anaveriler(ModelAnaveriler())
+def addAktarimlar(params):
+    cc = Aktarimlar(ModelAktarimlar())
     return cc.add(params)
