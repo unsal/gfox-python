@@ -393,7 +393,6 @@ class ModelAktarimlar(_Base):
     dayanaklar_data = Column(JSON())
     paylasim_amaclari_data = Column(JSON())
     paylasim_sekilleri_data = Column(JSON())
-    yurtdisi = Column(Boolean())
     aciklama = Column(String(255))
     bilgiveren = Column(String(255))
     cid = Column(Integer())

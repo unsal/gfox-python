@@ -6,21 +6,23 @@ from db.connection import Connect
 from datetime import datetime
 from db.model import *
 from api.tanimlar.common import str2bool
-from api.verbis.kvbase import KVBase
+from api.verbis.myconnection import MyConnection
 
 #Temel connect, session, add, delete, getpidmname ve createdict için KVBase referans alındı...
-class Aktarimlar(KVBase):
-        def __init__(self, model):
-                KVBase.__init__(self, model)
+class Aktarimlar(MyConnection):
+        def __init__(self, params):
+                MyConnection.__init__(self)
+                self.params = params
 
         def __del__(self):
                 self.session.close()
 
-        def get(self, params):
+        def get(self):
                 try:
-                        cid_ = params.get('cid')
+                        cid_ = self.params.get('cid')
                         dict = []
 
+                        self.model = ModelViewAktarimlar
                         data = self.session.query(self.model).filter_by(cid=cid_)
 
                         for row in data:
@@ -57,17 +59,19 @@ class Aktarimlar(KVBase):
                 except Exception as err:
                         return Response("****** ERROR ***********  aktarimlar get query error! ******** ", err)
 
-        def add(self, params):
+        def add(self):
                 try:
+                        self.model = ModelAktarimlar()
+                        params = self.params
+
                         self.model.surec_pidm = params.get('surec_pidm')
                         self.model.kv_pidm = params.get('kv_pidm')
                         self.model.kurum_pidm =  params.get('kurum_pidm')
                         self.model.ulkeler_data = params.get('ulkeler_data')
-                        self.model.dayanaklar_data = params.get('sistemler_data')
+                        self.model.dayanaklar_data = params.get('dayanaklar_data')
                         self.model.paylasim_amaclari_data = params.get('paylasim_amaclari_data')
                         self.model.paylasim_sekilleri_data = params.get('paylasim_sekilleri_data')
 
-                        self.model.yurtdisi = params.get('yurtdisi')
                         self.model.aciklama = params.get('aciklama')
                         self.model.bilgiveren = params.get('bilgiveren')
                         self.model.cid = params.get('cid')
@@ -85,8 +89,11 @@ class Aktarimlar(KVBase):
                         print("insert error !!! ", err)
                         return '', 404
 
-        def update(self, params):
+        def update(self):
                 try:
+                        self.model = ModelAktarimlar
+                        params = self.params
+
                         pidm_ = params.get('pidm')
                         cid_ = params.get('cid')
                         row = self.session.query(self.model).filter_by( pidm=pidm_, cid=cid_).one()
@@ -98,7 +105,6 @@ class Aktarimlar(KVBase):
                         row.dayanaklar_data = params.get('dayanaklar_data')
                         row.paylasim_amaclari_data = params.get('paylasim_amaclari_data')
                         row.paylasim_sekilleri_data = params.get('paylasim_sekilleri_data')
-                        row.yurtdisi = params.get('yurtdisi')
                         row.aciklama = params.get('aciklama')
                         row.bilgiveren = params.get('bilgiveren')
                         row.uid = params.get('uid')
@@ -113,8 +119,11 @@ class Aktarimlar(KVBase):
                         print("update error !!! ", err)
                         return '', 404
 
-        def delete(self, params):
+        def delete(self):
                 try:
+                        self.model = ModelAktarimlar
+                        params = self.params
+
                         pidm_ = params.get('pidm')
                         cid_ = params.get('cid')
 
@@ -129,18 +138,15 @@ class Aktarimlar(KVBase):
 
 
 
-def getAktarimlar(params):
-    cc = Aktarimlar(ModelViewAktarimlar)
-    return cc.get(params)
-
-def updateAktarimlar(params):
-    cc = Aktarimlar(ModelAktarimlar)
-    return cc.update(params)
-
-def deleteAktarimlar(params):
-    cc = Aktarimlar(ModelAktarimlar)
-    return cc.delete(params)
-
-def addAktarimlar(params):
-    cc = Aktarimlar(ModelAktarimlar())
-    return cc.add(params)
+def aktarimlarAction(type, params):
+        cc = Aktarimlar(params)
+        if (type=="get"):
+                return cc.get()
+        elif (type=="add"):
+                return cc.add()
+        elif (type=="update"):
+                return cc.update()
+        elif (type=="delete"):
+                return cc.delete()
+        else:
+                return '', 404

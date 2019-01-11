@@ -6,19 +6,22 @@ from db.connection import Connect
 from datetime import datetime
 from db.model import *
 from api.tanimlar.common import str2bool
-from api.verbis.kvbase import KVBase
+from api.verbis.myconnection import MyConnection
 
 #Temel connect, session, add, delete, getpidmname ve createdict için KVBase referans alındı...
-class Anaveriler(KVBase):
-        def __init__(self, model):
-                KVBase.__init__(self, model)
+class Anaveriler(MyConnection):
+        def __init__(self, params):
+                MyConnection.__init__(self)
+                self.params = params
 
         def __del__(self):
                 self.session.close()
 
-        def get(self, params):
+        def get(self):
                 try:
-                        cid_ = params.get('cid')
+                        self.model = ModelViewAnaveriler
+                        cid_ = self.params.get('cid')
+
                         dict = []
 
                         data = self.session.query(self.model).filter_by(cid=cid_)
@@ -65,8 +68,11 @@ class Anaveriler(KVBase):
                 except Exception as err:
                         return Response("anaveriler get query error! ", err)
 
-        def add(self, params):
+        def add(self):
                 try:
+                        self.model = ModelAnaveriler()
+                        params = self.params
+
                         self.model.profil_pidm = params.get('profil_pidm')
                         self.model.surec_pidm = params.get('surec_pidm')
                         self.model.kv_pidm = params.get('kv_pidm')
@@ -92,8 +98,10 @@ class Anaveriler(KVBase):
                         print("insert error !!! ", err)
                         return '', 404
 
-        def update(self, params):
+        def update(self):
                 try:
+                        self.model = ModelAnaveriler
+                        params = self.params
                         pidm_ = params.get('pidm')
                         cid_ = params.get('cid')
                         row = self.session.query(self.model).filter_by( pidm=pidm_, cid=cid_).one()
@@ -120,8 +128,10 @@ class Anaveriler(KVBase):
                         print("update error !!! ", err)
                         return '', 404
 
-        def delete(self, params):
+        def delete(self):
                 try:
+                        self.model = ModelAnaveriler
+                        params = self.params
                         pidm_ = params.get('pidm')
                         cid_ = params.get('cid')
 
@@ -135,19 +145,19 @@ class Anaveriler(KVBase):
                         return '', 404
 
 
+def anaverilerAction(type, params):
+        cc = Anaveriler(params)
+        if (type=="get"):
+                return cc.get()
+        elif (type=="add"):
+                return cc.add()
+        elif (type=="update"):
+                return cc.update()
+        elif (type=="delete"):
+                return cc.delete()
+        else:
+                return '', 404
 
-def getAnaveriler(params):
-    cc = Anaveriler(ModelViewAnaveriler)
-    return cc.get(params)
 
-def updateAnaveriler(params):
-    cc = Anaveriler(ModelAnaveriler)
-    return cc.update(params)
 
-def deleteAnaveriler(params):
-    cc = Anaveriler(ModelAnaveriler)
-    return cc.delete(params)
 
-def addAnaveriler(params):
-    cc = Anaveriler(ModelAnaveriler())
-    return cc.add(params)
