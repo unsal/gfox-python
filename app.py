@@ -4,17 +4,11 @@ from flask import request
 import json
 
 # API
-from api.tanimlar.tanimlar import *
-from api.verbis.kvtalepler import *
 from db.auth import getCids, login
 from api.export import downloadExcel
-from api.tanimlar.bolumler import *
-from api.tanimlar.surecler import *
-
-from api.verbis.anaveriler import *
-from api.verbis.aktarimlar import *
 
 from db.model import *
+from db.framework import *
 
 from flask_cors import CORS
 
@@ -70,119 +64,51 @@ def _export():
     return response
 
 
-# TANIMLAR **************************************
-# GET TANIM
-@app.route('/tanimlar/<id>', methods=['POST'])
-def _getTanim(id):
-        data = request.get_json(silent=True)
-        cid  = data.get('cid')
-        response = getTanim(id, cid)
-        return response
+#************** TANIMLAR  **************************
+@app.route('/tanimlar/<id>/<type>', methods=['POST'])
+def httpTanimlar(id, type):
+    params = request.get_json(silent=True)
+    model = getModel(id)
+    return myAction(model, model, params, type) #id: get, add, update, delete
+
+#************** TANIMLAR-BOLUMLER  **************************
+@app.route('/bolumler/<type>', methods=['POST'])
+def httpTanimlarBolumler(type):
+    params = request.get_json(silent=True)
+    return myAction(ModelBolumler, ModelViewBolumler, params, type) #id: get, add, update, delete
+
+#************** TANIMLAR-BOLUMLER  **************************
+@app.route('/surecler/<type>', methods=['POST'])
+def httpTanimlarSurecler(type):
+    params = request.get_json(silent=True)
+    return myAction(ModelSurecler, ModelViewSurecler, params, type) #id: get, add, update, delete
 
 
-# ADD TANIM
-@app.route('/tanimlar/add', methods=['POST'])
-def _addTanim():
-    _form = request.form
-    response = addTanim(_form)
-    return response
+#************** options  **************************
+@app.route('/options/<id>', methods=['POST'])
+def httpOptions(id):
+    params = request.get_json(silent=True)
+    model = getOptionsModel(id)
+    return optionsAction(model,params)
 
 
-# DELETE TANIM
-@app.route('/tanimlar/del', methods=['POST'])
-def _deleteTanim():
-    _form = request.form
-    response = deleteTanim(_form)
-    return response
-
-# Get Tanim Name for pidm. Anaveriler için
-@app.route('/tanimlar/name', methods=['POST'])
-def _getTanimName():
-    data = request.get_json(silent=True)
-    id  = data.get('id')
-    pidm  = data.get('pidm')
-    cid  = data.get('cid')
-
-    response = getTanimName(id, pidm, cid)
-    return response
-
-# ****************** MAIN ************************************************
-@app.route('/verbis/kvtalepler', methods=['GET'])
-# GET
-def _get_kvtalepler():
-    response = get_kvtalepler()
-    return response
-
-@app.route('/verbis/kvtalepler/add', methods=['POST'])
-# ADD
-def _add_kvtalepler():
-    data = request.get_json(silent=True)
-    response = add_kvtalepler(data)
-    return response
-
-
-#************** BOLUMLER **************************
-@app.route('/tanimlar/bolumler', methods=['POST'])
-def _getBolumler():
-    data = request.get_json(silent=True)
-    cid  = data.get('cid')
-    response = getBolumler(cid)
-    return response
-
-# ADD
-@app.route('/tanimlar/bolumler/add', methods=['POST'])
-def _addBolumler():
-    data = request.get_json(silent=True)
-    response = addBolum(data)
-    return response
-
-# DEL
-@app.route('/tanimlar/bolumler/delete', methods=['POST'])
-def _deleteBolum():
-    data = request.get_json(silent=True)
-    response = deleteBolum(data)
-    return response
-
-#************** SURECLER **************************
-@app.route('/tanimlar/surecler', methods=['POST'])
-def _getSurecler():
-    data = request.get_json(silent=True)
-    cid  = data.get('cid')
-    response = getSurecler(cid)
-    return response
-
-# 4dropdown
-@app.route('/tanimlar/sureclerdd', methods=['POST'])
-def _getSureclerDropdown():
-    data = request.get_json(silent=True)
-    cid  = data.get('cid')
-    response = getDropdownSurecler(cid)
-    return response
-
-@app.route('/tanimlar/surecler/add', methods=['POST'])
-def _addSurecler():
-    data = request.get_json(silent=True)
-    response = addSurec(data)
-    return response
-
-@app.route('/tanimlar/surecler/delete', methods=['POST'])
-def _deleteSurec():
-    data = request.get_json(silent=True)
-    response = deleteSurec(data)
-    return response
-
-
-#************** ANAVERILER **************************
-@app.route('/verbis/anaveriler/<type>', methods=['POST'])
+    #************** ANAVERILER **************************
+@app.route('/anaveriler/<type>', methods=['POST'])
 def httpAnaveriler(type):
     params = request.get_json(silent=True)
-    return anaverilerAction(type,params) #id: get, add, update, delete
+    return myAction(ModelAnaveriler, ModelViewAnaveriler, params, type) #id: get, add, update, delete
 
 #************** AKTARIMLAR **************************
-@app.route('/verbis/aktarimlar/<type>', methods=['POST'])
+@app.route('/aktarimlar/<type>', methods=['POST'])
 def httpAktarimlar(type):
     params = request.get_json(silent=True)
-    return aktarimlarAction(type,params) #id: get, add, update, delete
+    return myAction(ModelAktarimlar, ModelViewAktarimlar, params, type) #id: get, add, update, delete
+
+#************** TALEPLER  **************************
+@app.route('/talepler/<type>', methods=['POST'])
+def httpTalepler(type):
+    params = request.get_json(silent=True)
+    return myAction(ModelTalepler, ModelViewTalepler, params, type) #id: get, add, update, delete
 
 
 # ****************** MAIN ************************************************

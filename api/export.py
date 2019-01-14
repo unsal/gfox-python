@@ -5,9 +5,16 @@ from flask import send_file
 
 from db.connection import Connect
 from datetime import datetime
-from db.model import Profiller, Birimler, KV, IslemeAmaclari, Kanallar, Sistemler, Dokumanlar, Ortamlar, Sureler, Kurumlar, Dayanaklar, PaylasimAmaclari, PaylasimSekilleri, Ulkeler, getModel, YayinDurumlari, ViewKVProfilModel, ViewKVPaylasimModel, ViewKVAnaveriModel
-from api.tanimlar.common import str2bool
+from db.model import *
 import json
+
+
+def str2bool(str):
+  if (str.upper() == "TRUE"):
+    return True
+  else:
+    return False
+
 
 class Export():
         def __init__(self):
@@ -19,7 +26,7 @@ class Export():
 
         def createSheetTanimlar(self, wb, model, title_, cid_):
                 try:
-                        if (model==Profiller):
+                        if (model==ModelProfiller):
                             ws = wb.active
                             ws.title = title_
                         else:
@@ -30,10 +37,10 @@ class Export():
                         # ws['A1'].font = Font(bold=True)
                         ws['B1'] = title_
 
-                        if (model == Sistemler):
+                        if (model == ModelSistemler):
                            ws['C1'] = "Dahili"
                            data = self.session.query(model.pidm, model.name, model.local).filter_by(cid=cid_)
-                        elif (model == Ulkeler):
+                        elif (model == ModelUlkeler):
                            ws['C1'] = "Tel Kodu"
                            ws['D1'] = "Güvenli Ülke"
                            data = self.session.query(model.pidm, model.name, model.phone_area, model.secure).filter_by(cid=cid_)
@@ -46,9 +53,9 @@ class Export():
                         for row in data:
                                 ws['A'+str(i)] = row.pidm
                                 ws['B'+str(i)] = row.name
-                                if (model == Sistemler):
+                                if (model == ModelSistemler):
                                         ws['C'+str(i)] = row.local
-                                elif (model == Ulkeler):
+                                elif (model == ModelUlkeler):
                                         ws['C'+str(i)] = row.phone_area
                                         ws['D'+str(i)] = row.secure
 
@@ -74,7 +81,8 @@ class Export():
                         ws['C1'].font = Font(bold=True)
                         ws['D1'].font = Font(bold=True)
 
-                        model=ViewKVProfilModel
+                        # model=ViewKVProfilModel
+                        model=ModelAnaveriler
 
                         data = self.session.query(model.pidm, model.profil_name, model.birim_name, model.data).filter_by(cid=cid_)
                         data = data.order_by(model.profil_name, model.birim_name)
@@ -114,7 +122,8 @@ class Export():
                         ws['F1'].font = Font(bold=True)
                         ws['G1'].font = Font(bold=True)
 
-                        model=ViewKVPaylasimModel
+                        # model=ViewKVPaylasimModel
+                        model=ModelViewAktarimlar
 
                         data = self.session.query(model.pidm, model.birim_name, model.kv_name, model.kurum_name, model.islemeamaclari_data, model.paylasimamaclari_data, model.paylasimsekilleri_data).filter_by(cid=cid_)
                         data = data.order_by(model.birim_name, model.kv_name, model.kurum_name)
@@ -165,7 +174,8 @@ class Export():
                         ws['J1'].font = Font(bold=True)
                         ws['K1'].font = Font(bold=True)
 
-                        model=ViewKVAnaveriModel
+                        # model=ViewKVAnaveriModel
+                        model=ModelViewAnaveriler
 
                         data = self.session.query(model.pidm, model.birim_name, model.kv_name, model.sure_name, model.ulkeler_data, model.kanallar_data, model.dokumanlar_data, model.sistemler_data, model.dayanaklar_data, model.ortamlar_data, model.tedbirler_data).filter_by(cid=cid_)
                         data = data.order_by(model.birim_name, model.kv_name)
@@ -194,20 +204,20 @@ class Export():
         def downloadExcel(self, cid_):
                 try:
                         wb = Workbook()
-                        ws = self.createSheetTanimlar(wb, Profiller, 'Profiller',cid_)
-                        ws = self.createSheetTanimlar(wb, Birimler, 'Birimler',cid_)
-                        ws = self.createSheetTanimlar(wb, KV, 'Veri Kategorileri',cid_)
-                        ws = self.createSheetTanimlar(wb, IslemeAmaclari, 'İşleme Amaçları',cid_)
-                        ws = self.createSheetTanimlar(wb, Kanallar, 'Kanallar',cid_)
-                        ws = self.createSheetTanimlar(wb, Sistemler, 'Sistemler',cid_)
-                        ws = self.createSheetTanimlar(wb, Dokumanlar, 'Dokumanlar',cid_)
-                        ws = self.createSheetTanimlar(wb, Ortamlar, 'Ortamlar',cid_)
-                        ws = self.createSheetTanimlar(wb, Sureler, 'Sureler',cid_)
-                        ws = self.createSheetTanimlar(wb, Kurumlar, 'Kurumlar',cid_)
-                        ws = self.createSheetTanimlar(wb, Dayanaklar, 'Dayanaklar',cid_)
-                        ws = self.createSheetTanimlar(wb, PaylasimAmaclari, 'PaylasimAmaclari',cid_)
-                        ws = self.createSheetTanimlar(wb, PaylasimSekilleri, 'PaylasimSekilleri',cid_)
-                        ws = self.createSheetTanimlar(wb, Ulkeler, 'Ulkeler',cid_)
+                        ws = self.createSheetTanimlar(wb, ModelProfiller, 'Profiller',cid_)
+                        ws = self.createSheetTanimlar(wb, ModelBirimler, 'Birimler',cid_)
+                        ws = self.createSheetTanimlar(wb, ModelKV, 'Veri Kategorileri',cid_)
+                        ws = self.createSheetTanimlar(wb, ModelIslemeAmaclari, 'İşleme Amaçları',cid_)
+                        ws = self.createSheetTanimlar(wb, ModelKanallar, 'Kanallar',cid_)
+                        ws = self.createSheetTanimlar(wb, ModelSistemler, 'Sistemler',cid_)
+                        ws = self.createSheetTanimlar(wb, ModelDokumanlar, 'Dokumanlar',cid_)
+                        ws = self.createSheetTanimlar(wb, ModelOrtamlar, 'Ortamlar',cid_)
+                        ws = self.createSheetTanimlar(wb, ModelSureler, 'Sureler',cid_)
+                        ws = self.createSheetTanimlar(wb, ModelKurumlar, 'Kurumlar',cid_)
+                        ws = self.createSheetTanimlar(wb, ModelDayanaklar, 'Dayanaklar',cid_)
+                        ws = self.createSheetTanimlar(wb, ModelPaylasimAmaclari, 'PaylasimAmaclari',cid_)
+                        ws = self.createSheetTanimlar(wb, ModelPaylasimSekilleri, 'PaylasimSekilleri',cid_)
+                        ws = self.createSheetTanimlar(wb, ModelUlkeler, 'Ulkeler',cid_)
                         ws = self.createSheetKVProfil(wb, cid_)
                         ws = self.createSheetKVPaylasim(wb, cid_)
                         ws = self.createSheetKVAnaveri(wb, cid_)
