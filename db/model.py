@@ -8,84 +8,6 @@ from flask import Response
 # tek _ classlar için, __ çifti tanım ve fonksiyonlar için
 _Base = declarative_base()
 
-# TANIMLAR ********************************************************
-# Custom base class
-
-class FrameworkBase(object):
-    pidm = Column(Integer(), primary_key=True, autoincrement=True)
-    timestamp = Column(TIMESTAMP, default=datetime.now())
-    cid = Column(Integer())
-    uid = Column(String(60))
-
-class TanimlarBase(object):
-    pidm = Column(Integer(), primary_key=True, autoincrement=True)
-    name = Column(String(255))
-    timestamp = Column(TIMESTAMP, default=datetime.now())
-    cid = Column(Integer())
-    uid = Column(String(60))
-
-
-# TANIMLAR -------------------------------------------
-class ModelProfiller(TanimlarBase, _Base):
-    __tablename__ = 'profiller'
-
-class ModelDayanaklar(TanimlarBase, _Base):
-    __tablename__ = 'dayanaklar'
-
-class ModelBirimler(TanimlarBase, _Base):
-    __tablename__ = 'birimler'
-
-class ModelKV(TanimlarBase, _Base):
-    __tablename__ = 'kv'
-    kv_kategoriler_pidm = Column(Integer())
-
-class ModelKVKategoriler(TanimlarBase, _Base):
-    __tablename__ = 'kv_kategoriler'
-
-class ModelIslemeAmaclari(TanimlarBase, _Base):
-    __tablename__ = 'isleme_amaclari'
-
-class ModelKanallar(TanimlarBase, _Base):
-    __tablename__ = 'kanallar'
-
-class ModelSistemler(TanimlarBase, _Base):
-    __tablename__ = 'sistemler'
-    local = Column(Boolean())
-
-class ModelDokumanlar(TanimlarBase, _Base):
-    __tablename__ = 'dokumanlar'
-
-class ModelOrtamlar(TanimlarBase, _Base):
-    __tablename__ = 'ortamlar'
-
-class ModelSureler(TanimlarBase, _Base):
-    __tablename__ = 'sureler'
-
-class ModelKurumlar(TanimlarBase, _Base):
-    __tablename__ = 'kurumlar'
-
-class ModelPaylasimAmaclari(TanimlarBase, _Base):
-    __tablename__ = 'paylasim_amaclari'
-
-class ModelPaylasimSekilleri(TanimlarBase, _Base):
-    __tablename__ = 'paylasim_sekilleri'
-
-class ModelUlkeler(TanimlarBase, _Base):
-    __tablename__ = 'ulkeler'
-    phone_area = Column(String(3))
-    secure = Column(Boolean())
-
-#pidm ve name olduğu için tanim bölümündeki standart modelden yararlandım
-class ModelYayinDurumlari(TanimlarBase, _Base):
-    __tablename__ = 'ss_yayindurumu'
-
-#KV TALEPLER Tablosu için
-class ModelIslemler(TanimlarBase, _Base):
-    __tablename__ = 'islemler'
-
-class ModelTedbirler(TanimlarBase, _Base):
-    __tablename__ = 'tedbirler'
-
 
 # react tarafından post edilen ID'leri tek noktadan kolayca yönetebilmek için yazıldı.
 class ModelID():
@@ -107,6 +29,10 @@ class ModelID():
       Islemler = "islemler"
       Tedbirler = "tedbirler"
       Surecler = "surecler"
+      Bolumler = "bolumler"
+      Anaveriler = "anaveriler"
+      Aktarimlar = "aktarimlar"
+      Talepler = "talepler"
 
 def getModel(id):
     if (id == ModelID.Profiller):
@@ -137,12 +63,16 @@ def getModel(id):
             model = ModelPaylasimSekilleri
     elif (id==ModelID.GuvenliUlkeler):
             model = ModelUlkeler
-    elif (id==ModelID.YayinDurumlari):
-            model = ModelYayinDurumlari
     elif (id==ModelID.Islemler):
             model = ModelIslemler
     elif (id==ModelID.Tedbirler):
             model = ModelTedbirler
+    elif (id==ModelID.Anaveriler):
+            model = ModelAnaveriler
+    elif (id==ModelID.Aktarimlar):
+            model = ModelAktarimlar
+    elif (id==ModelID.Talepler):
+            model = ModelTalepler
     else:
             model = None
 
@@ -180,18 +110,78 @@ def getOptionsModel(id):
             model = ModelPaylasimSekilleri
     elif (id==ModelID.GuvenliUlkeler):
             model = ModelUlkeler
-    elif (id==ModelID.YayinDurumlari):
-            model = ModelYayinDurumlari
     elif (id==ModelID.Islemler):
             model = ModelIslemler
     elif (id==ModelID.Tedbirler):
             model = ModelTedbirler
+    elif (id==ModelID.Bolumler):
+            model = ModelOptionsBolumler
     else:
         #diğer optionsları getModelden alıyor.. burası özel options için
             model = None
 
     return model
 
+
+
+# TANIMLAR ********************************************************
+# Custom base class
+
+class ModelBase(object):
+    pidm = Column(Integer(), primary_key=True, autoincrement=True)
+    timestamp = Column(TIMESTAMP, default=datetime.now())
+    cid = Column(Integer())
+    uid = Column(String(60))
+
+class TanimlarBase(object):
+    pidm = Column(Integer(), primary_key=True, autoincrement=True)
+    name = Column(String(255))
+    timestamp = Column(TIMESTAMP, default=datetime.now())
+    cid = Column(Integer())
+    uid = Column(String(60))
+
+
+# TANIMLAR -------------------------------------------
+class ModelProfiller(TanimlarBase, _Base):
+    __tablename__ = 't_profiller'
+
+class ModelDayanaklar(TanimlarBase, _Base):
+    __tablename__ = 't_dayanaklar'
+
+class ModelBirimler(TanimlarBase, _Base):
+    __tablename__ = 't_birimler'
+
+class ModelKVKategoriler(TanimlarBase, _Base):
+    __tablename__ = 't_kv_kategoriler'
+
+class ModelIslemeAmaclari(TanimlarBase, _Base):
+    __tablename__ = 't_isleme_amaclari'
+
+class ModelKanallar(TanimlarBase, _Base):
+    __tablename__ = 't_kanallar'
+
+class ModelOrtamlar(TanimlarBase, _Base):
+    __tablename__ = 't_ortamlar'
+
+class ModelSureler(TanimlarBase, _Base):
+    __tablename__ = 't_sureler'
+
+class ModelKurumlar(TanimlarBase, _Base):
+    __tablename__ = 't_kurumlar'
+
+class ModelPaylasimAmaclari(TanimlarBase, _Base):
+    __tablename__ = 't_paylasim_amaclari'
+
+class ModelPaylasimSekilleri(TanimlarBase, _Base):
+    __tablename__ = 't_paylasim_sekilleri'
+
+
+#KV TALEPLER Tablosu için
+class ModelIslemler(TanimlarBase, _Base):
+    __tablename__ = 't_islemler'
+
+class ModelTedbirler(TanimlarBase, _Base):
+    __tablename__ = 't_tedbirler'
 
 class AuthModel(_Base):
     __tablename__='view_auth'
@@ -207,18 +197,9 @@ class AuthLoginModel(_Base):
     admin       = Column('admin',Boolean(), default=False)
     timestamp = Column(TIMESTAMP, default=datetime.now())
 
-#KV -------------------------------------------
-class ModelViewKV(_Base):
-    __tablename__ = 'view_kv'
-    pidm = Column(Integer(), primary_key=True)
-    name = Column(String(255))
-    kategori_name = Column(String(255))
-    cid = Column(Integer())
-    uid = Column(String(60))
 
-#KV -------------------------------------------
-class ModelAnaveriler(FrameworkBase, _Base):
-    __tablename__ = 'anaveriler'
+class ModelAnaveriler(ModelBase, _Base):
+    __tablename__ = 'v_anaveriler'
     profil_pidm = Column(Integer())
     surec_pidm = Column(Integer())
     kv_pidm = Column(Integer())
@@ -231,7 +212,7 @@ class ModelAnaveriler(FrameworkBase, _Base):
     ortamlar_data = Column(JSON())
     tedbirler_data = Column(JSON())
 
-class ModelViewAnaveriler(FrameworkBase, _Base):
+class ModelViewAnaveriler(ModelBase, _Base):
     __tablename__ = 'view_anaveriler'
     profil_pidm = Column(Integer())
     profil_name = Column(String(255))
@@ -250,8 +231,8 @@ class ModelViewAnaveriler(FrameworkBase, _Base):
 
 
 # AKTARIMLAR -------------------------------------------
-class ModelAktarimlar(FrameworkBase, _Base):
-    __tablename__ = 'aktarimlar'
+class ModelAktarimlar(ModelBase, _Base):
+    __tablename__ = 'v_aktarimlar'
     surec_pidm = Column(Integer())
     kv_pidm = Column(Integer())
     kurum_pidm = Column(Integer())
@@ -263,7 +244,7 @@ class ModelAktarimlar(FrameworkBase, _Base):
     aciklama = Column(String(255))
     bilgiveren = Column(String(255))
 
-class ModelViewAktarimlar(FrameworkBase, _Base):
+class ModelViewAktarimlar(ModelBase, _Base):
     __tablename__ = 'view_aktarimlar'
     surec_pidm = Column(Integer())
     surec_name = Column(String(255))
@@ -281,8 +262,8 @@ class ModelViewAktarimlar(FrameworkBase, _Base):
     bilgiveren = Column(String(60))
 
 # AKTARIMLAR -------------------------------------------
-class ModelTalepler(FrameworkBase, _Base):
-    __tablename__ = 'talepler'
+class ModelTalepler(ModelBase, _Base):
+    __tablename__ = 'v_talepler'
     isim = Column(String(60))
     tckno = Column(String(11))
     eposta = Column(String(100))
@@ -295,7 +276,7 @@ class ModelTalepler(FrameworkBase, _Base):
     bilgitalebi = Column(String(255))
     profiller_data = Column(JSON())
 
-class ModelViewTalepler(FrameworkBase, _Base):
+class ModelViewTalepler(ModelBase, _Base):
     __tablename__ = 'view_talepler'
     isim = Column(String(60))
     tckno = Column(String(11))
@@ -312,10 +293,10 @@ class ModelViewTalepler(FrameworkBase, _Base):
 
 # BOLUMLER -----------------------------------------------
 class ModelBolumler(TanimlarBase, _Base):
-    __tablename__ = 'bolumler'
+    __tablename__ = 't_bolumler'
     birim_pidm = Column(Integer())
 
-class ModelViewBolumler(FrameworkBase, _Base):
+class ModelViewBolumler(ModelBase, _Base):
     __tablename__ = 'view_bolumler'
     birim_pidm = Column(Integer())
     birim_name = Column(String(255))
@@ -324,15 +305,26 @@ class ModelViewBolumler(FrameworkBase, _Base):
 
 # SURECLER -----------------------------------------------
 class ModelSurecler(TanimlarBase, _Base):
-    __tablename__ = 'surecler'
+    __tablename__ = 't_surecler'
     bolum_pidm = Column(Integer())
 
-class ModelViewSurecler(FrameworkBase, _Base):
+class ModelViewSurecler(TanimlarBase, _Base):
     __tablename__ = 'view_surecler'
     birim_name = Column(String(255))
     bolum_pidm = Column(Integer())
     bolum_name = Column(String(255))
-    name = Column(String(255))
+
+
+#KV -------------------------------------------
+class ModelKV(TanimlarBase, _Base):
+    __tablename__ = 't_kv'
+    kv_kategori_pidm = Column(Integer())
+
+class ModelViewKV(TanimlarBase, _Base):
+    __tablename__ = 'view_kv'
+    kv_kategori_pidm = Column(Integer())
+    kv_kategori_name = Column(String(255))
+
 
 # *************** ÖZEL OPTIONS ******************************
 class ModelOptions(object):
@@ -342,6 +334,27 @@ class ModelOptions(object):
 
 class ModelOptionsSurecler(ModelOptions,_Base):
     __tablename__ = 'options_surecler'
+
+class ModelOptionsBolumler(ModelOptions,_Base):
+    __tablename__ = 'options_bolumler'
+
+class ModelUlkeler(TanimlarBase, _Base):
+    __tablename__ = 't_ulkeler'
+    phone_area = Column(String(3))
+    secure = Column(Boolean())
+
+class ModelViewUlkeler(TanimlarBase, _Base):
+    __tablename__ = 'view_ulkeler'
+    phone_area = Column(String(3))
+    secure = Column(Boolean())
+
+class ModelSistemler(TanimlarBase, _Base):
+    __tablename__ = 't_sistemler'
+    local = Column(Boolean())
+
+class ModelViewSistemler(TanimlarBase, _Base):
+    __tablename__ = 'view_sistemler'
+    local = Column(Boolean())
 
 
 

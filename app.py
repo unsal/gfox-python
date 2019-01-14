@@ -92,23 +92,35 @@ def httpOptions(id):
     return optionsAction(model,params)
 
 
-    #************** ANAVERILER **************************
 @app.route('/anaveriler/<type>', methods=['POST'])
 def httpAnaveriler(type):
     params = request.get_json(silent=True)
     return myAction(ModelAnaveriler, ModelViewAnaveriler, params, type) #id: get, add, update, delete
 
-#************** AKTARIMLAR **************************
 @app.route('/aktarimlar/<type>', methods=['POST'])
 def httpAktarimlar(type):
     params = request.get_json(silent=True)
     return myAction(ModelAktarimlar, ModelViewAktarimlar, params, type) #id: get, add, update, delete
 
-#************** TALEPLER  **************************
 @app.route('/talepler/<type>', methods=['POST'])
 def httpTalepler(type):
     params = request.get_json(silent=True)
     return myAction(ModelTalepler, ModelViewTalepler, params, type) #id: get, add, update, delete
+
+@app.route('/kv/<type>', methods=['POST'])
+def httpKV(type):
+    params = request.get_json(silent=True)
+    return myAction(ModelKV, ModelViewKV, params, type) #id: get, add, update, delete
+
+@app.route('/ulkeler/<type>', methods=['POST'])
+def httpUlkeler(type):
+    params = request.get_json(silent=True)
+    return myAction(ModelUlkeler, ModelViewUlkeler, params, type) #id: get, add, update, delete
+
+@app.route('/sistemler/<type>', methods=['POST'])
+def httpSistemler(type):
+    params = request.get_json(silent=True)
+    return myAction(ModelSistemler, ModelViewSistemler, params, type) #id: get, add, update, delete
 
 
 # ****************** MAIN ************************************************

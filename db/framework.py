@@ -34,7 +34,7 @@ class Framework ():
                                         isExcludedField = (key in ['cid', 'uid', 'timestamp'])
 
                                         if isDataField:
-                                           tableName = key.replace('_data','')
+                                           tableName = "t_"+key.replace('_data','')
                                            myRow[key]=self.createDict(tableName, item.value, cid_)
                                         elif not isExcludedField:
                                            myRow[key]=item.value
@@ -150,7 +150,7 @@ class Framework ():
 
                         dict = []
                         for row in data:
-                               dict.append({'pidm': row.pidm, 'name': row.name, 'pidm':row.pidm})
+                               dict.append({'pidm': row.pidm, 'name': row.name})
 
                         _json = jsonify(dict)
 
