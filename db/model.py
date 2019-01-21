@@ -13,6 +13,7 @@ _Base = declarative_base()
 class ModelID():
       Profiller = "profiller"
       Birimler = "birimler"
+      Sorumlular = "sorumlular"
       Dayanaklar = "dayanaklar"
       Sureler = "sureler"
       IslemeAmaclari = "islemeamaclari"
@@ -33,6 +34,7 @@ class ModelID():
       Anaveriler = "anaveriler"
       Aktarimlar = "aktarimlar"
       Talepler = "talepler"
+
 
 def getModel(id):
     if (id == ModelID.Profiller):
@@ -73,6 +75,8 @@ def getModel(id):
             model = ModelAktarimlar
     elif (id==ModelID.Talepler):
             model = ModelTalepler
+    elif (id==ModelID.Sorumlular):
+            model = ModelSorumlular
     else:
             model = None
 
@@ -116,6 +120,8 @@ def getOptionsModel(id):
             model = ModelTedbirler
     elif (id==ModelID.Bolumler):
             model = ModelOptionsBolumler
+    elif (id==ModelID.Sorumlular):
+            model = ModelSorumlular
     else:
         #diğer optionsları getModelden alıyor.. burası özel options için
             model = None
@@ -148,9 +154,6 @@ class ModelProfiller(TanimlarBase, _Base):
 class ModelDayanaklar(TanimlarBase, _Base):
     __tablename__ = 't_dayanaklar'
 
-class ModelBirimler(TanimlarBase, _Base):
-    __tablename__ = 't_birimler'
-
 class ModelKVKategoriler(TanimlarBase, _Base):
     __tablename__ = 't_kv_kategoriler'
 
@@ -174,6 +177,7 @@ class ModelPaylasimAmaclari(TanimlarBase, _Base):
 
 class ModelPaylasimSekilleri(TanimlarBase, _Base):
     __tablename__ = 't_paylasim_sekilleri'
+
 
 
 #KV TALEPLER Tablosu için
@@ -355,6 +359,50 @@ class ModelSistemler(TanimlarBase, _Base):
 class ModelViewSistemler(TanimlarBase, _Base):
     __tablename__ = 'view_sistemler'
     local = Column(Boolean())
+
+class ModelBirimler(TanimlarBase, _Base):
+    __tablename__ = 't_birimler'
+    sorumlular_data = Column(JSON())
+
+class ModelViewBirimler(TanimlarBase, _Base):
+    __tablename__ = 'view_birimler'
+    sorumlular_data = Column(JSON())
+
+
+class ModelSorumlular(TanimlarBase, _Base):
+    __tablename__ = 't_sorumlular'
+    phone = Column(String(100))
+    email = Column(String(100))
+
+# **** CHART MODELS *******************************************
+class ModelChartBase(object):
+    pidm = Column(Integer(), primary_key=True)
+    name = Column(String(100))
+    value =  Column(Integer())
+    cid =  Column(Integer())
+
+class ModelChartMaxKV(ModelChartBase, _Base):
+    __tablename__ = 'chart_max_kv'
+
+#En fazla KV aktarım yapılan kurumlar
+class ModelChartMaxKurumlar(ModelChartBase, _Base):
+    __tablename__ = 'chart_max_kurumlar'
+
+#En fazla KV İşlenen Profiller
+class ModelChartMaxProfiller(ModelChartBase, _Base):
+    __tablename__ = 'chart_max_profiller'
+
+class ModelChartMaxSurecler(ModelChartBase, _Base):
+    __tablename__ = 'chart_max_surecler'
+
+class ModelChartTalepler(_Base):
+    __tablename__ = 'chart_talepler'
+    name = Column(String(100), primary_key=True)
+    value =  Column(Integer())
+    cid =  Column(Integer())
+
+
+
 
 
 

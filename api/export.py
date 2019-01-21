@@ -210,7 +210,6 @@ class Export():
                         ws = self.createSheetTanimlar(wb, ModelIslemeAmaclari, 'İşleme Amaçları',cid_)
                         ws = self.createSheetTanimlar(wb, ModelKanallar, 'Kanallar',cid_)
                         ws = self.createSheetTanimlar(wb, ModelSistemler, 'Sistemler',cid_)
-                        ws = self.createSheetTanimlar(wb, ModelDokumanlar, 'Dokumanlar',cid_)
                         ws = self.createSheetTanimlar(wb, ModelOrtamlar, 'Ortamlar',cid_)
                         ws = self.createSheetTanimlar(wb, ModelSureler, 'Sureler',cid_)
                         ws = self.createSheetTanimlar(wb, ModelKurumlar, 'Kurumlar',cid_)

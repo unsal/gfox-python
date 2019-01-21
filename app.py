@@ -8,7 +8,8 @@ from db.auth import getCids, login
 from api.export import downloadExcel
 
 from db.model import *
-from db.framework import *
+from api.framework import *
+from api.charts import *
 
 from flask_cors import CORS
 
@@ -64,64 +65,77 @@ def _export():
     return response
 
 
-#************** TANIMLAR  **************************
-@app.route('/tanimlar/<id>/<type>', methods=['POST'])
-def httpTanimlar(id, type):
-    params = request.get_json(silent=True)
-    model = getModel(id)
-    return myAction(model, model, params, type) #id: get, add, update, delete
-
-#************** TANIMLAR-BOLUMLER  **************************
-@app.route('/bolumler/<type>', methods=['POST'])
-def httpTanimlarBolumler(type):
-    params = request.get_json(silent=True)
-    return myAction(ModelBolumler, ModelViewBolumler, params, type) #id: get, add, update, delete
-
-#************** TANIMLAR-BOLUMLER  **************************
-@app.route('/surecler/<type>', methods=['POST'])
-def httpTanimlarSurecler(type):
-    params = request.get_json(silent=True)
-    return myAction(ModelSurecler, ModelViewSurecler, params, type) #id: get, add, update, delete
-
-
 #************** options  **************************
 @app.route('/options/<id>', methods=['POST'])
-def httpOptions(id):
+def returnOptions(id):
     params = request.get_json(silent=True)
     model = getOptionsModel(id)
     return optionsAction(model,params)
 
 
+#************** TANIMLAR  **************************
+@app.route('/tanimlar/<id>/<type>', methods=['POST'])
+def returnTanimlar(id, type):
+    params = request.get_json(silent=True)
+    model = getModel(id)
+    return myAction(model, model, params, type) #id: get, add, update, delete
+
+#************** TANIMLAR DIGER  **************************
+@app.route('/bolumler/<type>', methods=['POST'])
+def returnTanimlarBolumler(type):
+    params = request.get_json(silent=True)
+    return myAction(ModelBolumler, ModelViewBolumler, params, type) #id: get, add, update, delete
+
+@app.route('/surecler/<type>', methods=['POST'])
+def returnTanimlarSurecler(type):
+    params = request.get_json(silent=True)
+    return myAction(ModelSurecler, ModelViewSurecler, params, type) #id: get, add, update, delete
+
 @app.route('/anaveriler/<type>', methods=['POST'])
-def httpAnaveriler(type):
+def returnAnaveriler(type):
     params = request.get_json(silent=True)
     return myAction(ModelAnaveriler, ModelViewAnaveriler, params, type) #id: get, add, update, delete
 
 @app.route('/aktarimlar/<type>', methods=['POST'])
-def httpAktarimlar(type):
+def returnAktarimlar(type):
     params = request.get_json(silent=True)
     return myAction(ModelAktarimlar, ModelViewAktarimlar, params, type) #id: get, add, update, delete
 
 @app.route('/talepler/<type>', methods=['POST'])
-def httpTalepler(type):
+def returnTalepler(type):
     params = request.get_json(silent=True)
     return myAction(ModelTalepler, ModelViewTalepler, params, type) #id: get, add, update, delete
 
 @app.route('/kv/<type>', methods=['POST'])
-def httpKV(type):
+def returnKV(type):
     params = request.get_json(silent=True)
     return myAction(ModelKV, ModelViewKV, params, type) #id: get, add, update, delete
 
 @app.route('/ulkeler/<type>', methods=['POST'])
-def httpUlkeler(type):
+def returnUlkeler(type):
     params = request.get_json(silent=True)
     return myAction(ModelUlkeler, ModelViewUlkeler, params, type) #id: get, add, update, delete
 
 @app.route('/sistemler/<type>', methods=['POST'])
-def httpSistemler(type):
+def returnSistemler(type):
     params = request.get_json(silent=True)
     return myAction(ModelSistemler, ModelViewSistemler, params, type) #id: get, add, update, delete
 
+@app.route('/sorumlular/<type>', methods=['POST'])
+def returnSorumlular(type):
+    params = request.get_json(silent=True)
+    return myAction(ModelSorumlular, ModelSorumlular, params, type) #id: get, add, update, delete
+
+@app.route('/birimler/<type>', methods=['POST'])
+def returnBirimler(type):
+    params = request.get_json(silent=True)
+    return myAction(ModelBirimler, ModelViewBirimler, params, type) #id: get, add, update, delete
+
+# ****************** CHARTS ************************************************
+@app.route('/chart/<id>', methods=['POST'])
+def returnChart(id):
+    params = request.get_json(silent=True)
+    return chartsAction(id,  params)
 
 # ****************** MAIN ************************************************
 if __name__=="__main__":
@@ -131,8 +145,8 @@ if __name__=="__main__":
 
 # concurrent requestler için:
         # app.debug = True
-        # http_server = WSGIServer(('', 8000), app)
-        # http_server.serve_forever()
+        # return_server = WSGIServer(('', 8000), app)
+        # return_server.serve_forever()
 
 
 
