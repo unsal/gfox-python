@@ -18,7 +18,7 @@ class Chart ():
                 self.session.close()
 
         # GET query results
-        def chartData(self, model, params):
+        def chart(self, model, params):
                 try:
                         cid_ = params.get('cid')
 
@@ -41,19 +41,87 @@ class Chart ():
 
                 except Exception as err:
                         return Response("!!! Chart Data Query Failure !!!", err)
+        def treeKV (self, model, params):
+                try:
+                        cid_ = params.get('cid')
+
+                        result = self.session.query(model).filter_by(cid=cid_)
+
+                        dict = {"name":"Kurum"}
+                        children1 = []
+                        for key in result:
+                                row = {"name":key.name}
+                                children2 = []
+
+                                data = key.data
+
+                                for item in data:
+                                        children2.append({"name":item,"value":item})
+
+                                row["children"] = children2
+
+                                children1.append(row)
+
+                        dict["children"]=children1
+
+                        _json = jsonify(dict)
+
+                        if (len(dict) == 0):
+                                return Response([])
+                        else:
+                                return _json
+
+
+                except  Exception as err:
+                        return Response("!!! Chart Data Query Failure !!!", err)
+
+        def mapKV (self, model, params):
+                try:
+                        # cid_ = params.get('cid')
+                        # data = self.session.query(model).filter_by(cid=cid_)
+
+                        result = self.session.query(model).all()
+
+                        dict = []
+                        for key in result:
+                                data = key.data
+                                row = {"name":data["name"], "value":data["value"], "maxvalue":data["maxvalue"]}
+                                dict.append(row)
+
+                        # print(dict)
+
+                        _json = jsonify(dict)
+
+                        if (len(dict) == 0):
+                                return Response([])
+                        else:
+                                return _json
+
+
+                except  Exception as err:
+                        return Response("!!! Chart World eMAP Data Query Failure !!!", err)
 
 
 def chartsAction(id, params):
         cc = Chart()
         if (id == "01"):
-                return cc.chartData(ModelChartMaxKV,  params)
+                return cc.chart(ModelChartMaxKV,  params)
         elif (id == "02"):
-                return cc.chartData(ModelChartMaxKurumlar,  params)
+                return cc.chart(ModelChartMaxKurumlar,  params)
         elif (id == "03"):
-                return cc.chartData(ModelChartMaxProfiller,  params)
+                return cc.chart(ModelChartMaxProfiller,  params)
         elif (id == "04"):
-                return cc.chartData(ModelChartMaxSurecler,  params)
+                return cc.chart(ModelChartMaxSurecler,  params)
         elif (id == "05"):
-                return cc.chartData(ModelChartTalepler,  params)
+                return cc.chart(ModelChartTalepler,  params)
+        elif (id == "06"):
+                return cc.treeKV(ModelChartTreeBirimKV,params)
+        elif (id == "07"):
+                return cc.treeKV(ModelChartTreeProfilKV,params)
+        elif (id == "08"):
+                return cc.treeKV(ModelChartTreeBirimKurum,params)
+        elif (id == "09"):
+                return cc.mapKV(ModelChartMap,params)
         else:
                 return Response('CHART ID FOR MODEL NOT FOUND!')
+

@@ -131,6 +131,11 @@ def returnBirimler(type):
     params = request.get_json(silent=True)
     return myAction(ModelBirimler, ModelViewBirimler, params, type) #id: get, add, update, delete
 
+@app.route('/kisiler/<type>', methods=['POST'])
+def returnKisiler(type):
+    params = request.get_json(silent=True)
+    return myAction(ModelKisiler, ModelKisiler, params, type) #id: get, add, update, delete
+
 # ****************** CHARTS ************************************************
 @app.route('/chart/<id>', methods=['POST'])
 def returnChart(id):

@@ -220,6 +220,8 @@ class ModelViewAnaveriler(ModelBase, _Base):
     __tablename__ = 'view_anaveriler'
     profil_pidm = Column(Integer())
     profil_name = Column(String(255))
+    birim_name = Column(String(255))
+    bolum_name = Column(String(255))
     surec_pidm = Column(Integer())
     surec_name = Column(String(255))
     kv_pidm = Column(Integer())
@@ -251,6 +253,8 @@ class ModelAktarimlar(ModelBase, _Base):
 class ModelViewAktarimlar(ModelBase, _Base):
     __tablename__ = 'view_aktarimlar'
     surec_pidm = Column(Integer())
+    birim_name = Column(String(255))
+    bolum_name = Column(String(255))
     surec_name = Column(String(255))
     kv_pidm = Column(Integer())
     kv_name = Column(String(255))
@@ -364,15 +368,25 @@ class ModelBirimler(TanimlarBase, _Base):
     __tablename__ = 't_birimler'
     sorumlular_data = Column(JSON())
 
+# Birimler > Veri sorumluları
 class ModelViewBirimler(TanimlarBase, _Base):
     __tablename__ = 'view_birimler'
     sorumlular_data = Column(JSON())
-
 
 class ModelSorumlular(TanimlarBase, _Base):
     __tablename__ = 't_sorumlular'
     phone = Column(String(100))
     email = Column(String(100))
+
+class ModelKisiler(TanimlarBase, _Base):
+    __tablename__ = 't_kisiler'
+    profiller_data = Column(JSON())
+    birimler_data = Column(JSON())
+    kimlikno = Column(String(11))
+    tel = Column(String(100))
+    eposta = Column(String(100))
+
+
 
 # **** CHART MODELS *******************************************
 class ModelChartBase(object):
@@ -401,8 +415,24 @@ class ModelChartTalepler(_Base):
     value =  Column(Integer())
     cid =  Column(Integer())
 
+class ModelTree(object):
+    name = Column(String(255), primary_key=True)
+    data =  Column(JSON())
+    cid =  Column(Integer())
 
+class ModelChartTreeBirimKV(ModelTree, _Base):
+    __tablename__ = 'chart_tree_birimkv'
 
+class ModelChartTreeProfilKV(ModelTree, _Base):
+    __tablename__ = 'chart_tree_profilkv'
+
+class ModelChartTreeBirimKurum(ModelTree, _Base):
+    __tablename__ = 'chart_tree_birimkurum'
+
+class ModelChartMap(_Base):
+    __tablename__ = 'chart_map'
+    pidm = Column(Integer(), primary_key=True)
+    data =  Column(JSON())
 
 
 
