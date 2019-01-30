@@ -29,7 +29,7 @@ class Auth():
                 for row in data:
                         dict.append( {'cid': row.cid, 'name': row.cid_name} )
 
-                # print('dict: ', dict)
+                # print('dict: ', dict) ..
                 _json = jsonify(dict)
 
                 # print('dict: ', dict)
