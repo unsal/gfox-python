@@ -9,6 +9,7 @@ from api.export import downloadExcel
 
 from db.model import *
 from api.framework import *
+from api.envanter import *
 from api.charts import *
 
 from flask_cors import CORS
@@ -78,69 +79,79 @@ def returnOptions(id):
 def returnTanimlar(id, type):
     params = request.get_json(silent=True)
     model = getModel(id)
-    return myAction(model, model, params, type) #id: get, add, update, delete
+    return myAction(model, model, params, type)
 
 #************** TANIMLAR DIGER  **************************
 @app.route('/bolumler/<type>', methods=['POST'])
 def returnTanimlarBolumler(type):
     params = request.get_json(silent=True)
-    return myAction(ModelBolumler, ModelViewBolumler, params, type) #id: get, add, update, delete
+    return myAction(ModelBolumler, ModelViewBolumler, params, type)
 
 @app.route('/surecler/<type>', methods=['POST'])
 def returnTanimlarSurecler(type):
     params = request.get_json(silent=True)
-    return myAction(ModelSurecler, ModelViewSurecler, params, type) #id: get, add, update, delete
+    return myAction(ModelSurecler, ModelViewSurecler, params, type)
 
 @app.route('/anaveriler/<type>', methods=['POST'])
 def returnAnaveriler(type):
     params = request.get_json(silent=True)
-    return myAction(ModelAnaveriler, ModelViewAnaveriler, params, type) #id: get, add, update, delete
+    return myAction(ModelAnaveriler, ModelViewAnaveriler, params, type)
 
 @app.route('/aktarimlar/<type>', methods=['POST'])
 def returnAktarimlar(type):
     params = request.get_json(silent=True)
-    return myAction(ModelAktarimlar, ModelViewAktarimlar, params, type) #id: get, add, update, delete
+    return myAction(ModelAktarimlar, ModelViewAktarimlar, params, type)
 
 @app.route('/talepler/<type>', methods=['POST'])
 def returnTalepler(type):
     params = request.get_json(silent=True)
-    return myAction(ModelTalepler, ModelViewTalepler, params, type) #id: get, add, update, delete
+    return myAction(ModelTalepler, ModelViewTalepler, params, type)
 
 @app.route('/kv/<type>', methods=['POST'])
 def returnKV(type):
     params = request.get_json(silent=True)
-    return myAction(ModelKV, ModelViewKV, params, type) #id: get, add, update, delete
+    return myAction(ModelKV, ModelViewKV, params, type)
 
 @app.route('/ulkeler/<type>', methods=['POST'])
 def returnUlkeler(type):
     params = request.get_json(silent=True)
-    return myAction(ModelUlkeler, ModelViewUlkeler, params, type) #id: get, add, update, delete
+    return myAction(ModelUlkeler, ModelViewUlkeler, params, type)
 
 @app.route('/sistemler/<type>', methods=['POST'])
 def returnSistemler(type):
     params = request.get_json(silent=True)
-    return myAction(ModelSistemler, ModelViewSistemler, params, type) #id: get, add, update, delete
+    return myAction(ModelSistemler, ModelViewSistemler, params, type)
 
 @app.route('/sorumlular/<type>', methods=['POST'])
 def returnSorumlular(type):
     params = request.get_json(silent=True)
-    return myAction(ModelSorumlular, ModelSorumlular, params, type) #id: get, add, update, delete
+    return myAction(ModelSorumlular, ModelSorumlular, params, type)
 
 @app.route('/birimler/<type>', methods=['POST'])
 def returnBirimler(type):
     params = request.get_json(silent=True)
-    return myAction(ModelBirimler, ModelViewBirimler, params, type) #id: get, add, update, delete
+    return myAction(ModelBirimler, ModelViewBirimler, params, type)
 
 @app.route('/kisiler/<type>', methods=['POST'])
 def returnKisiler(type):
     params = request.get_json(silent=True)
-    return myAction(ModelKisiler, ModelKisiler, params, type) #id: get, add, update, delete
+    return myAction(ModelKisiler, ModelKisiler, params, type)
 
 # ****************** CHARTS ************************************************
 @app.route('/chart/<id>', methods=['POST'])
 def returnChart(id):
     params = request.get_json(silent=True)
     return chartsAction(id,  params)
+
+
+
+# ****************** ANAVERILER 2 ************************************************
+@app.route('/envanter/<type>', methods=['POST'])
+def returnEnvanter(type):
+    params = request.get_json(silent=True)
+    return actionEnvanter(params, type)
+
+
 
 # ****************** MAIN ************************************************
 if __name__=="__main__":

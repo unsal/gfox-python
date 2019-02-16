@@ -11,71 +11,70 @@ _Base = declarative_base()
 
 # react tarafından post edilen ID'leri tek noktadan kolayca yönetebilmek için yazıldı.
 class ModelID():
-      Profiller = "profiller"
-      Birimler = "birimler"
-      Sorumlular = "sorumlular"
-      Dayanaklar = "dayanaklar"
-      Sureler = "sureler"
-      IslemeAmaclari = "islemeamaclari"
-      ToplamaKanallari = "kanallar"
-      Kurumlar = "kurumlar"
-      KV = "kv"
-      KVKategoriler = "kvkategoriler"
-      ArsivOrtamlari = "ortamlar"
-      PaylasimAmaclari = "paylasimamaclari"
-      PaylasimSekilleri = "paylasimsekilleri"
-      KVSistemler = "sistemler"
-      GuvenliUlkeler = "ulkeler"
-      YayinDurumlari = "yayindurumlari"
-      Islemler = "islemler"
-      Tedbirler = "tedbirler"
-      Surecler = "surecler"
-      Bolumler = "bolumler"
-      Anaveriler = "anaveriler"
-      Aktarimlar = "aktarimlar"
-      Talepler = "talepler"
+      Profiller = ["profil","profiller"]
+      Birimler = ["birim","birimler"]
+      Bolumler = ["bolum","bolumler"]
+      Surecler = ["surec","surecler"]
+      KV = ["kv"]
+      Sorumlular = ["sorumlular"]
+      Dayanaklar = ["dayanaklar"]
+      Sureler = ["sure","sureler"]
+      IslemeAmaclari = ["isleme_amaclari"]
+      ToplamaKanallari = ["kanallar"]
+      Kurumlar = ["kurumlar"]
+      KVKategoriler = ["kv_kategoriler"]
+      ArsivOrtamlari = ["ortamlar"]
+      PaylasimAmaclari = ["paylasim_amaclari"]
+      PaylasimSekilleri = ["paylasim_sekilleri"]
+      KVSistemler = ["sistemler"]
+      GuvenliUlkeler = ["ulkeler"]
+      Islemler = ["islemler"]
+      Tedbirler = ["tedbirler"]
+      Anaveriler = ["anaveriler"]
+      Aktarimlar = ["aktarimlar"]
+      Talepler = ["talepler"]
 
 
 def getModel(id):
-    if (id == ModelID.Profiller):
+    if (id in ModelID.Profiller):
             model = ModelProfiller
-    elif (id==ModelID.Birimler):
+    elif (id in ModelID.Birimler):
             model = ModelBirimler
-    elif (id==ModelID.Dayanaklar):
+    elif (id in ModelID.Dayanaklar):
             model = ModelDayanaklar
-    elif (id==ModelID.IslemeAmaclari):
+    elif (id in ModelID.IslemeAmaclari):
             model = ModelIslemeAmaclari
-    elif (id==ModelID.ToplamaKanallari):
+    elif (id in ModelID.ToplamaKanallari):
             model = ModelKanallar
-    elif (id==ModelID.KV):
+    elif (id in ModelID.KV):
             model = ModelKV
-    elif (id==ModelID.KVKategoriler):
+    elif (id in ModelID.KVKategoriler):
             model = ModelKVKategoriler
-    elif (id==ModelID.ArsivOrtamlari):
+    elif (id in ModelID.ArsivOrtamlari):
             model = ModelOrtamlar
-    elif (id==ModelID.KVSistemler):
+    elif (id in ModelID.KVSistemler):
             model=ModelSistemler
-    elif (id==ModelID.Sureler):
+    elif (id in ModelID.Sureler):
             model = ModelSureler
-    elif (id==ModelID.Kurumlar):
+    elif (id in ModelID.Kurumlar):
             model = ModelKurumlar
-    elif (id==ModelID.PaylasimAmaclari):
+    elif (id in ModelID.PaylasimAmaclari):
             model = ModelPaylasimAmaclari
-    elif (id==ModelID.PaylasimSekilleri):
+    elif (id in ModelID.PaylasimSekilleri):
             model = ModelPaylasimSekilleri
-    elif (id==ModelID.GuvenliUlkeler):
+    elif (id in ModelID.GuvenliUlkeler):
             model = ModelUlkeler
-    elif (id==ModelID.Islemler):
+    elif (id in ModelID.Islemler):
             model = ModelIslemler
-    elif (id==ModelID.Tedbirler):
+    elif (id in ModelID.Tedbirler):
             model = ModelTedbirler
-    elif (id==ModelID.Anaveriler):
+    elif (id in ModelID.Anaveriler):
             model = ModelAnaveriler
-    elif (id==ModelID.Aktarimlar):
+    elif (id in ModelID.Aktarimlar):
             model = ModelAktarimlar
-    elif (id==ModelID.Talepler):
+    elif (id in ModelID.Talepler):
             model = ModelTalepler
-    elif (id==ModelID.Sorumlular):
+    elif (id in ModelID.Sorumlular):
             model = ModelSorumlular
     else:
             model = None
@@ -84,43 +83,43 @@ def getModel(id):
 
 #özel optionslar için...
 def getOptionsModel(id):
-    if (id == ModelID.Surecler):
+    if (id in ModelID.Surecler):
             model = ModelOptionsSurecler
-    elif (id == ModelID.Profiller):
+    elif (id in ModelID.Profiller):
             model = ModelProfiller
-    elif (id==ModelID.Birimler):
+    elif (id in ModelID.Birimler):
             model = ModelBirimler
-    elif (id==ModelID.Dayanaklar):
+    elif (id in ModelID.Dayanaklar):
             model = ModelDayanaklar
-    elif (id==ModelID.IslemeAmaclari):
+    elif (id in ModelID.IslemeAmaclari):
             model = ModelIslemeAmaclari
-    elif (id==ModelID.ToplamaKanallari):
+    elif (id in ModelID.ToplamaKanallari):
             model = ModelKanallar
-    elif (id==ModelID.KV):
+    elif (id in ModelID.KV):
             model = ModelKV
-    elif (id==ModelID.KVKategoriler):
+    elif (id in ModelID.KVKategoriler):
             model = ModelKVKategoriler
-    elif (id==ModelID.ArsivOrtamlari):
+    elif (id in ModelID.ArsivOrtamlari):
             model = ModelOrtamlar
-    elif (id==ModelID.KVSistemler):
+    elif (id in ModelID.KVSistemler):
             model=ModelSistemler
-    elif (id==ModelID.Sureler):
+    elif (id in ModelID.Sureler):
             model = ModelSureler
-    elif (id==ModelID.Kurumlar):
+    elif (id in ModelID.Kurumlar):
             model = ModelKurumlar
-    elif (id==ModelID.PaylasimAmaclari):
+    elif (id in ModelID.PaylasimAmaclari):
             model = ModelPaylasimAmaclari
-    elif (id==ModelID.PaylasimSekilleri):
+    elif (id in ModelID.PaylasimSekilleri):
             model = ModelPaylasimSekilleri
-    elif (id==ModelID.GuvenliUlkeler):
+    elif (id in ModelID.GuvenliUlkeler):
             model = ModelUlkeler
-    elif (id==ModelID.Islemler):
+    elif (id in ModelID.Islemler):
             model = ModelIslemler
-    elif (id==ModelID.Tedbirler):
+    elif (id in ModelID.Tedbirler):
             model = ModelTedbirler
-    elif (id==ModelID.Bolumler):
+    elif (id in ModelID.Bolumler):
             model = ModelOptionsBolumler
-    elif (id==ModelID.Sorumlular):
+    elif (id in ModelID.Sorumlular):
             model = ModelSorumlular
     else:
         #diğer optionsları getModelden alıyor.. burası özel options için
@@ -433,6 +432,15 @@ class ModelChartMap(_Base):
     __tablename__ = 'chart_map'
     pidm = Column(Integer(), primary_key=True)
     data =  Column(JSON())
+
+class ModelEnvanter(_Base):
+    __tablename__ = 'v_anaveriler2'
+    pidm = Column(Integer(), primary_key=True)
+    data =  Column(JSON())
+    timestamp = Column(TIMESTAMP, default=datetime.now())
+    cid = Column(Integer())
+    uid = Column(String(100))
+
 
 
 
