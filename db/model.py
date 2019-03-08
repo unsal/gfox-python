@@ -201,74 +201,6 @@ class AuthLoginModel(_Base):
     timestamp = Column(TIMESTAMP, default=datetime.now())
 
 
-class ModelAnaveriler(ModelBase, _Base):
-    __tablename__ = 'v_anaveriler'
-    profil_pidm = Column(Integer())
-    surec_pidm = Column(Integer())
-    kv_pidm = Column(Integer())
-
-    sure_pidm = Column(Integer())
-    kanallar_data = Column(JSON())
-    sistemler_data = Column(JSON())
-    dayanaklar_data = Column(JSON())
-    isleme_amaclari_data = Column(JSON())
-    ortamlar_data = Column(JSON())
-    tedbirler_data = Column(JSON())
-
-class ModelViewAnaveriler(ModelBase, _Base):
-    __tablename__ = 'view_anaveriler'
-    profil_pidm = Column(Integer())
-    profil_name = Column(String(255))
-    birim_name = Column(String(255))
-    bolum_name = Column(String(255))
-    surec_pidm = Column(Integer())
-    surec_name = Column(String(255))
-    kv_pidm = Column(Integer())
-    kv_name = Column(String(255))
-    sure_pidm = Column(Integer())
-    sure_name = Column(String(255))
-    kanallar_data = Column(JSON())
-    sistemler_data = Column(JSON())
-    dayanaklar_data = Column(JSON())
-    isleme_amaclari_data = Column(JSON())
-    ortamlar_data = Column(JSON())
-    tedbirler_data = Column(JSON())
-
-
-# AKTARIMLAR -------------------------------------------
-class ModelAktarimlar(ModelBase, _Base):
-    __tablename__ = 'v_aktarimlar'
-    surec_pidm = Column(Integer())
-    kv_pidm = Column(Integer())
-    kurum_pidm = Column(Integer())
-
-    ulkeler_data = Column(JSON())
-    dayanaklar_data = Column(JSON())
-    paylasim_amaclari_data = Column(JSON())
-    paylasim_sekilleri_data = Column(JSON())
-    aciklama = Column(String(255))
-    bilgiveren = Column(String(255))
-
-class ModelViewAktarimlar(ModelBase, _Base):
-    __tablename__ = 'view_aktarimlar'
-    surec_pidm = Column(Integer())
-    birim_name = Column(String(255))
-    bolum_name = Column(String(255))
-    surec_name = Column(String(255))
-    kv_pidm = Column(Integer())
-    kv_name = Column(String(255))
-    kurum_pidm = Column(Integer())
-    kurum_name = Column(String(255))
-
-    ulkeler_data = Column(JSON())
-    dayanaklar_data = Column(JSON())
-    paylasim_amaclari_data = Column(JSON())
-    paylasim_sekilleri_data = Column(JSON())
-    yurtdisi = Column(Boolean())
-    aciklama = Column(String(255))
-    bilgiveren = Column(String(60))
-
-# AKTARIMLAR -------------------------------------------
 class ModelTalepler(ModelBase, _Base):
     __tablename__ = 'v_talepler'
     isim = Column(String(60))
@@ -387,35 +319,15 @@ class ModelKisiler(TanimlarBase, _Base):
 
 
 
-# **** CHART MODELS *******************************************
-class ModelChartBase(object):
-    pidm = Column(Integer(), primary_key=True)
-    name = Column(String(100))
-    value =  Column(Integer())
-    cid =  Column(Integer())
-
-class ModelChartMaxKV(ModelChartBase, _Base):
-    __tablename__ = 'chart_max_kv'
-
-#En fazla KV aktarım yapılan kurumlar
-class ModelChartMaxKurumlar(ModelChartBase, _Base):
-    __tablename__ = 'chart_max_kurumlar'
-
-#En fazla KV İşlenen Profiller
-class ModelChartMaxProfiller(ModelChartBase, _Base):
-    __tablename__ = 'chart_max_profiller'
-
-class ModelChartMaxSurecler(ModelChartBase, _Base):
-    __tablename__ = 'chart_max_surecler'
-
 class ModelChartTalepler(_Base):
     __tablename__ = 'chart_talepler'
     name = Column(String(100), primary_key=True)
     value =  Column(Integer())
     cid =  Column(Integer())
 
+
 class ModelTree(object):
-    name = Column(String(255), primary_key=True)
+    name = Column(String(100), primary_key=True)
     data =  Column(JSON())
     cid =  Column(Integer())
 
@@ -430,17 +342,25 @@ class ModelChartTreeBirimKurum(ModelTree, _Base):
 
 class ModelChartMap(_Base):
     __tablename__ = 'chart_map'
-    pidm = Column(Integer(), primary_key=True)
-    data =  Column(JSON())
+    name = Column(String(255), primary_key=True)
+    value =  Column(Integer())
+    cid =  Column(Integer())
 
-class ModelEnvanter(_Base):
-    __tablename__ = 'v_anaveriler2'
+
+
+# ENVANTER **********************************************
+class BaseEnvanter(object):
     pidm = Column(Integer(), primary_key=True)
     data =  Column(JSON())
     timestamp = Column(TIMESTAMP, default=datetime.now())
     cid = Column(Integer())
     uid = Column(String(100))
 
+class ModelAnaveriler(BaseEnvanter, _Base):
+    __tablename__ = 'v_anaveriler2'
+
+class ModelAktarimlar(BaseEnvanter, _Base):
+    __tablename__ = 'v_aktarimlar2'
 
 
 

@@ -8,14 +8,14 @@ from db.auth import getCids, login
 from api.export import downloadExcel
 
 from db.model import *
-from api.framework import *
-from api.envanter import *
+from api.frameworkTanimlar import *
+from api.frameworkEnvanter import *
 from api.charts import *
 
 from flask_cors import CORS
 
 #concurrent requestler için en altta main de
-from gevent.pywsgi import WSGIServer
+# from gevent.pywsgi import WSGIServer
 import logging
 # logging.basicConfig()
 
@@ -52,6 +52,7 @@ def _login():
     data = request.get_json(silent=True)
     uid  = data.get('uid')
     pwd  = data.get('pwd')
+    print('uid:', uid)
 #     logger.info('uid: '+uid)
     response = login(uid, pwd)
 
@@ -92,16 +93,6 @@ def returnTanimlarSurecler(type):
     params = request.get_json(silent=True)
     return myAction(ModelSurecler, ModelViewSurecler, params, type)
 
-@app.route('/anaveriler/<type>', methods=['POST'])
-def returnAnaveriler(type):
-    params = request.get_json(silent=True)
-    return myAction(ModelAnaveriler, ModelViewAnaveriler, params, type)
-
-@app.route('/aktarimlar/<type>', methods=['POST'])
-def returnAktarimlar(type):
-    params = request.get_json(silent=True)
-    return myAction(ModelAktarimlar, ModelViewAktarimlar, params, type)
-
 @app.route('/talepler/<type>', methods=['POST'])
 def returnTalepler(type):
     params = request.get_json(silent=True)
@@ -138,25 +129,24 @@ def returnKisiler(type):
     return myAction(ModelKisiler, ModelKisiler, params, type)
 
 # ****************** CHARTS ************************************************
-@app.route('/chart/<id>', methods=['POST'])
-def returnChart(id):
+@app.route('/chart', methods=['POST'])
+def returnChart():
     params = request.get_json(silent=True)
-    return chartsAction(id,  params)
-
+    return chartsGateway(params)
 
 
 # ****************** ANAVERILER 2 ************************************************
-@app.route('/envanter/<type>', methods=['POST'])
-def returnEnvanter(type):
+# id: anaveriler, aktarimlar / type: get, update, delete
+@app.route('/envanter/<id>/<type>', methods=['POST'])
+def returnEnvanter(id, type):
     params = request.get_json(silent=True)
-    return actionEnvanter(params, type)
-
+    return actionEnvanter(params, id, type)
 
 
 # ****************** MAIN ************************************************
 if __name__=="__main__":
-#     app.run(host="127.0.0.1", port=8000, debug=True, threaded=True)
-    app.run(host="127.0.0.1", port=8000, debug=True)
+    app.run(host="0.0.0.0", port=8001, debug=True, threaded=True)
+#     app.run(host="0.0.0.0",debug=True) # server
     print("Server started successfully..")
 
 # concurrent requestler için:

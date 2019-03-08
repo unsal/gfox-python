@@ -47,6 +47,7 @@ class Auth():
 
                 model = AuthLoginModel
                 data = self.session.query(model).filter_by(uid=uid, pwd=pwd)
+                print('Authentication query successfully!')
 
                 dict = []
 
@@ -56,6 +57,7 @@ class Auth():
                         secretKey = ConfigJWT.SECRETKEY
                         signature = jwt.encode(payload, secretKey, algorithm='HS256').decode('utf-8')
                         dict.append( {'token': signature} )
+                        print('token created succesfully...')
 
                 _json = jsonify(dict)
 
