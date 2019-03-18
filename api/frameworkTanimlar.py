@@ -150,7 +150,8 @@ class Framework ():
             if (cid_ is None):
                 data = self.session.query(model).all()
             else:
-                data = self.session.query(model).filter(model.cid.in_ ([cid_,1])).all()
+                data = self.session.query(model).filter(
+                    model.cid.in_([cid_, 1])).all()
 
             dict = []
             for row in data:

@@ -5,7 +5,7 @@ import json
 
 # API
 from db.auth import getCids, login
-from api.export import downloadExcel
+# from api.export import downloadExcel
 
 from db.model import *
 from api.frameworkTanimlar import *
@@ -14,7 +14,7 @@ from api.charts import *
 
 from flask_cors import CORS
 
-#concurrent requestler için en altta main de
+# concurrent requestler için en altta main de
 # from gevent.pywsgi import WSGIServer
 import logging
 # logging.basicConfig()
@@ -32,10 +32,10 @@ CORS(app)
 
 # app.config.from_object('config.Config')
 
+
 @app.route('/')
 def root():
     return 'Python web server working successfully...'
-
 
 
 # ****************** AUTH ************************************************
@@ -43,15 +43,16 @@ def root():
 # GET
 def _getCids():
     data = request.get_json(silent=True)
-    uid  = data.get('uid')
+    uid = data.get('uid')
     response = getCids(uid)
     return response
+
 
 @app.route('/auth/login', methods=['POST'])
 def _login():
     data = request.get_json(silent=True)
-    uid  = data.get('uid')
-    pwd  = data.get('pwd')
+    uid = data.get('uid')
+    pwd = data.get('pwd')
     print('uid:', uid)
 #     logger.info('uid: '+uid)
     response = login(uid, pwd)
@@ -59,69 +60,81 @@ def _login():
     return response
 
 # ****************** EXCEL ************************************************
-@app.route('/download', methods=['POST'])
-def _export():
-    data = request.get_json(silent=True)
-    cid  = data.get('cid')
-    response = downloadExcel(cid)
-    return response
 
 
-#************** options  **************************
+# @app.route('/download', methods=['POST'])
+# def _export():
+#     data = request.get_json(silent=True)
+#     cid = data.get('cid')
+#     response = downloadExcel(cid)
+#     return response
+
+
+# ************** options  **************************
 @app.route('/options/<id>', methods=['POST'])
 def returnOptions(id):
     params = request.get_json(silent=True)
     model = getOptionsModel(id)
-    return optionsAction(model,params)
+    return optionsAction(model, params)
 
 
-#************** TANIMLAR  **************************
+# ************** TANIMLAR  **************************
 @app.route('/tanimlar/<id>/<type>', methods=['POST'])
 def returnTanimlar(id, type):
     params = request.get_json(silent=True)
     model = getModel(id)
     return myAction(model, model, params, type)
 
-#************** TANIMLAR DIGER  **************************
+# ************** TANIMLAR DIGER  **************************
+
+
 @app.route('/bolumler/<type>', methods=['POST'])
 def returnTanimlarBolumler(type):
     params = request.get_json(silent=True)
     return myAction(ModelBolumler, ModelViewBolumler, params, type)
+
 
 @app.route('/surecler/<type>', methods=['POST'])
 def returnTanimlarSurecler(type):
     params = request.get_json(silent=True)
     return myAction(ModelSurecler, ModelViewSurecler, params, type)
 
+
 @app.route('/talepler/<type>', methods=['POST'])
 def returnTalepler(type):
     params = request.get_json(silent=True)
     return myAction(ModelTalepler, ModelViewTalepler, params, type)
+
 
 @app.route('/kv/<type>', methods=['POST'])
 def returnKV(type):
     params = request.get_json(silent=True)
     return myAction(ModelKV, ModelViewKV, params, type)
 
+
 @app.route('/ulkeler/<type>', methods=['POST'])
 def returnUlkeler(type):
     params = request.get_json(silent=True)
     return myAction(ModelUlkeler, ModelViewUlkeler, params, type)
+
 
 @app.route('/sistemler/<type>', methods=['POST'])
 def returnSistemler(type):
     params = request.get_json(silent=True)
     return myAction(ModelSistemler, ModelViewSistemler, params, type)
 
+
 @app.route('/sorumlular/<type>', methods=['POST'])
 def returnSorumlular(type):
     params = request.get_json(silent=True)
     return myAction(ModelSorumlular, ModelSorumlular, params, type)
 
+
 @app.route('/birimler/<type>', methods=['POST'])
 def returnBirimler(type):
     params = request.get_json(silent=True)
     return myAction(ModelBirimler, ModelViewBirimler, params, type)
+
 
 @app.route('/kisiler/<type>', methods=['POST'])
 def returnKisiler(type):
@@ -129,13 +142,15 @@ def returnKisiler(type):
     return myAction(ModelKisiler, ModelKisiler, params, type)
 
 # ****************** CHARTS ************************************************
+
+
 @app.route('/chart', methods=['POST'])
 def returnChart():
     params = request.get_json(silent=True)
     return chartsGateway(params)
 
 
-# ****************** ANAVERILER 2 ************************************************
+# ****************** ANAVERILER && AKTARIMLAR ************************************************
 # id: anaveriler, aktarimlar / type: get, update, delete
 @app.route('/envanter/<id>/<type>', methods=['POST'])
 def returnEnvanter(id, type):
@@ -144,25 +159,12 @@ def returnEnvanter(id, type):
 
 
 # ****************** MAIN ************************************************
-if __name__=="__main__":
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8001, debug=True, threaded=True)
 #     app.run(host="0.0.0.0",debug=True) # server
     print("Server started successfully..")
 
 # concurrent requestler için:
-        # app.debug = True
-        # return_server = WSGIServer(('', 8000), app)
-        # return_server.serve_forever()
-
-
-
-
-
-
-
-
-
-
-
-
-
+    # app.debug = True
+    # return_server = WSGIServer(('', 8000), app)
+    # return_server.serve_forever()

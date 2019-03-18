@@ -87,6 +87,8 @@ def getOptionsModel(id):
             model = ModelOptionsSurecler
     elif (id in ModelID.Profiller):
             model = ModelProfiller
+    elif (id in ModelID.Bolumler):
+            model = ModelOptionsBolumler
     elif (id in ModelID.Birimler):
             model = ModelBirimler
     elif (id in ModelID.Dayanaklar):
@@ -117,8 +119,6 @@ def getOptionsModel(id):
             model = ModelIslemler
     elif (id in ModelID.Tedbirler):
             model = ModelTedbirler
-    elif (id in ModelID.Bolumler):
-            model = ModelOptionsBolumler
     elif (id in ModelID.Sorumlular):
             model = ModelSorumlular
     else:
@@ -271,11 +271,11 @@ class ModelOptions(object):
     name = Column(String(255))
     cid = Column(Integer())
 
-class ModelOptionsSurecler(ModelOptions,_Base):
-    __tablename__ = 'options_surecler'
-
 class ModelOptionsBolumler(ModelOptions,_Base):
     __tablename__ = 'options_bolumler'
+
+class ModelOptionsSurecler(ModelOptions,_Base):
+    __tablename__ = 'options_surecler'
 
 class ModelUlkeler(TanimlarBase, _Base):
     __tablename__ = 't_ulkeler'
@@ -316,8 +316,6 @@ class ModelKisiler(TanimlarBase, _Base):
     kimlikno = Column(String(11))
     tel = Column(String(100))
     eposta = Column(String(100))
-
-
 
 class ModelChartTalepler(_Base):
     __tablename__ = 'chart_talepler'
