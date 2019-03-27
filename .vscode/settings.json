@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "${workspaceFolder}/venv/bin/python",
+    "python.pythonPath": "venv/bin/python",
     // "python.pythonPath": "/Users/unsal/github/python/gfox-api/venv/bin/python",
     "python.linting.mypyArgs": [
         "--ignore-missing-imports",
@@ -8,6 +8,11 @@
     ],
     "editor.tabSize": 2,
     "editor.fontFamily": "Menlo, Monaco, 'Courier New', monospace",
-    "favorites.sortDirection": "ASC",
-    "favorites.groupsFirst": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.enabled": true,
+    "python.linting.pep8Enabled": false,
+    "python.linting.flake8Enabled": true,
+    "editor.wordWrapColumn": 120,
+    "workbench.colorTheme": "★★★★★ NORD DARK ★★★★★",
+
 }

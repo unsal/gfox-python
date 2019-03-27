@@ -1,7 +1,9 @@
+#!/usr/bin/env python3
 # - *- coding: utf- 8 - *-
-from flask import Flask, jsonify
+
+from flask import Flask
 from flask import request
-import json
+# import json
 
 # API
 from db.auth import getCids, login
@@ -10,7 +12,7 @@ from db.auth import getCids, login
 from db.model import *
 from api.frameworkTanimlar import *
 from api.frameworkEnvanter import *
-from api.charts import *
+from api.analiz.charts import *
 
 from flask_cors import CORS
 
@@ -51,10 +53,8 @@ def _getCids():
 @app.route('/auth/login', methods=['POST'])
 def _login():
     data = request.get_json(silent=True)
-    uid = data.get('uid')
-    pwd = data.get('pwd')
-    print('uid:', uid)
-#     logger.info('uid: '+uid)
+    uid = data.get("uid")
+    pwd = data.get("pwd")
     response = login(uid, pwd)
 
     return response
@@ -147,7 +147,7 @@ def returnKisiler(type):
 @app.route('/chart', methods=['POST'])
 def returnChart():
     params = request.get_json(silent=True)
-    return chartsGateway(params)
+    return getChartData(params)
 
 
 # ****************** ANAVERILER && AKTARIMLAR ************************************************
@@ -161,7 +161,7 @@ def returnEnvanter(id, type):
 # ****************** MAIN ************************************************
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8001, debug=True, threaded=True)
-#     app.run(host="0.0.0.0",debug=True) # server
+    # app.run(host="0.0.0.0",debug=True) # server
     print("Server started successfully..")
 
 # concurrent requestler için:

@@ -6,6 +6,7 @@ class ConfigLocal:
         USER = "postgres"
         PASSWORD = "Qaz1wsx2!"
 
+
 class ConfigOZU:
         # HOST = "bt.ozyegin.edu.tr:5432"
         HOST = "bt.ozyegin.edu.tr:5432"
@@ -24,6 +25,7 @@ class ConfigOZU:
 #         DATABASE = "gfox"
 #         USER = "gfox"
 #         PASSWORD = "Qaz1wsx2!"
+
 
 class ConfigJWT:
         SECRETKEY = 'f8ab9dbb04441f985ff81985ea14a0c0'

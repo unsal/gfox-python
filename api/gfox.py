@@ -1,4 +1,5 @@
 from db.connection import Connect
+from flask import Response
 
 
 class Gfox ():
@@ -13,7 +14,7 @@ class Gfox ():
 
     def getCidName(self, cid):
         try:
-            sql = "select name from auth_cid where pidm={0} limit 1".format(
+            sql = "select name from t_cid where pidm={0} limit 1".format(
                 cid)
             result = self.session.execute(sql)
 
@@ -26,7 +27,31 @@ class Gfox ():
         except Exception:
             return "Error!"
 
+    def isAdminUser(self, uid):
+        try:
+            filter = {"uid": uid}
+            sql = "select 1 from auth_login where uid={uid!r} and admin=true limit 1".format(**filter)
+            result = self.session.execute(sql)
+
+            admin = False
+            for exist in result:
+                admin = True
+
+            print("admin? ", admin)
+
+            return admin
+
+        except Exception as err:
+            print("Exception Error: ", err)
+            return Response("!!! PieChart API Error !!!", err)
+
 
 def getCidName(cid):
     cc = Gfox()
     return cc.getCidName(cid)
+
+
+def isAdminUser(uid):
+    cc = Gfox()
+    return cc.isAdminUser(uid)
+

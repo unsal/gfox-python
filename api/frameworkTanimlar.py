@@ -1,12 +1,10 @@
+# - *- coding: utf- 8 - *-
+
 from flask import Response
 from flask import jsonify
-from flask import abort
-from flask import request
 from db.connection import Connect
-import json
 from array import array
 from sqlalchemy.inspection import inspect
-from db.model import *
 
 
 class Framework ():
@@ -20,9 +18,10 @@ class Framework ():
     # GET query results
     def get(self, model, params):
         try:
-            cid_ = params.get('cid')
+            cid = params.get('cid')
+            uid = params.get('uid')
 
-            data = self.session.query(model).filter_by(cid=cid_)
+            data = self.session.query(model).filter_by(cid=cid, uid=uid)
 
             dict = []
             for row in data:
@@ -34,9 +33,9 @@ class Framework ():
                     isExcludedField = (key in ['cid', 'uid', 'timestamp'])
 
                     if isDataField:
-                        tableName = "t_"+key.replace('_data', '')
+                        tableName = "t_" + key.replace('_data', '')
                         myRow[key] = self.createDict(
-                            tableName, item.value, cid_)
+                            tableName, item.value, cid)
                     elif not isExcludedField:
                         myRow[key] = item.value
 
@@ -72,9 +71,11 @@ class Framework ():
 
     def update(self, model, params):
         try:
-            pidm_ = params.get('pidm')
-            cid_ = params.get('cid')
-            row = self.session.query(model).filter_by(pidm=pidm_, cid=cid_)
+            pidm = params.get('pidm')
+            cid = params.get('cid')
+            uid = params.get('uid')
+
+            row = self.session.query(model).filter_by(pidm=pidm, cid=cid, uid=uid)
 
             row.update(params)
 
@@ -88,11 +89,12 @@ class Framework ():
     def delete(self, model, params):
         try:
 
-            pidm_ = params.get('pidm')
-            cid_ = params.get('cid')
+            pidm = params.get('pidm')
+            cid = params.get('cid')
+            uid = params.get('uid')
 
             row = self.session.query(model).filter_by(
-                pidm=pidm_, cid=cid_).one()
+                pidm=pidm, cid=cid, uid=uid).one()
             self.session.delete(row)
             self.session.commit()
             print("*** Record DELETE successfully ***")
@@ -121,7 +123,7 @@ class Framework ():
         except Exception:
             return []
 
-          # for converting json pidm -> names
+        # for converting json pidm -> names
 
     def getPidmName(self, tableName, pidm, cid):
         try:
@@ -144,14 +146,14 @@ class Framework ():
     # dropdown için..
     def getOptions(self, model, params):
         try:
-            cid_ = params.get('cid')
+            cid = params.get('cid')
 
             # yeni yöntemde kurum kontrolü yapmadan tanımlardan herşeyi getir.
-            if (cid_ is None):
+            if (cid is None):
                 data = self.session.query(model).all()
             else:
                 data = self.session.query(model).filter(
-                    model.cid.in_([cid_, 1])).all()
+                    model.cid.in_([cid, 1])).all()
 
             dict = []
             for row in data:

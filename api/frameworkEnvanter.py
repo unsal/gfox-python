@@ -1,12 +1,9 @@
 from flask import Response
 from flask import jsonify
-from flask import abort
-from flask import request
 from db.connection import Connect
-import json
-from array import array
 from sqlalchemy.inspection import inspect
 from db.model import *
+from api.gfox import isAdminUser
 
 
 class Envanter ():
@@ -29,13 +26,19 @@ class Envanter ():
     def get(self, params):
         try:
 
-            cid_ = params.get('cid')
-            uid_ = params.get('uid')
+            cid = params.get('cid')
+            uid = params.get('uid')
 
-            result = self.session.query(self.model).filter_by(
-                cid=cid_, uid=uid_).order_by(self.model.pidm.desc())
+            adminMode = isAdminUser(uid)
 
-            print("Query succesfull...")
+            if adminMode:
+                result = self.session.query(self.model).filter_by(cid=cid).order_by(self.model.pidm.desc())
+                print("uid: ", uid, " as admin user connected..")
+            else:
+                result = self.session.query(self.model).filter_by(cid=cid, uid=uid).order_by(self.model.pidm.desc())
+                print("uid: ", uid, " as regular user connected..")
+
+            print("FrameworkEnvanter query succesfull...")
 
             if (self.id == "anaveriler"):
                 dataf = ['birim', 'bolum', 'surec', 'kv_data', 'profil', 'sure',
@@ -84,11 +87,13 @@ class Envanter ():
 
     def update(self, params):
         try:
-            pidm_ = params.get('pidm')
-            cid_ = params.get('cid')
-            # uid_ = params.get('uid')
+            pidm = params.get('pidm')
+            cid = params.get('cid')
+            uid = params.get('uid')
+
+            # uid = params.get('uid')
             row = self.session.query(
-                self.model).filter_by(pidm=pidm_, cid=cid_)
+                self.model).filter_by(pidm=pidm, cid=cid, uid=uid)
 
             row.update(params)
 
@@ -117,11 +122,12 @@ class Envanter ():
 
     def delete(self, params):
         try:
-            pidm_ = params.get('pidm')
-            cid_ = params.get('cid')
+            pidm = params.get('pidm')
+            cid = params.get('cid')
+            uid = params.get('uid')
 
             row = self.session.query(self.model).filter_by(
-                pidm=pidm_, cid=cid_).one()
+                pidm=pidm, cid=cid, uid=uid).one()
             self.session.delete(row)
             self.session.commit()
             print("*** Record DELETED successfully ***")

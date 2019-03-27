@@ -12,8 +12,8 @@ app.config.from_object('db.config.ConfigLocal')  # local
 class Connect:
     def __init__(self):
         connStr = "postgresql+psycopg2://" + \
-            app.config['USER']+":"+app.config['PASSWORD']+"@" + \
-            app.config['HOST']+"/"+app.config['DATABASE']
+            app.config['USER'] + ":" + app.config['PASSWORD'] + "@" + \
+            app.config['HOST'] + "/" + app.config['DATABASE']
         self.engine = create_engine(connStr)
         self.session = sessionmaker(bind=self.engine)
         # print(connStr)

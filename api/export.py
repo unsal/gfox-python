@@ -4,7 +4,6 @@ from openpyxl.styles import Font
 from flask import send_file
 
 from db.connection import Connect
-from datetime import datetime
 from db.model import *
 import json
 
@@ -32,7 +31,7 @@ class Export():
             else:
                 ws = wb.create_sheet(title=title_)
 
-            # TITLE
+            # TITLE
             ws['A1'] = "Kodu"
             # ws['A1'].font = Font(bold=True)
             ws['B1'] = title_
@@ -54,15 +53,15 @@ class Export():
 
             i = 2
             for row in data:
-                ws['A'+str(i)] = row.pidm
-                ws['B'+str(i)] = row.name
+                ws['A' + str(i)] = row.pidm
+                ws['B' + str(i)] = row.name
                 if (model == ModelSistemler):
-                    ws['C'+str(i)] = row.local
+                    ws['C' + str(i)] = row.local
                 elif (model == ModelUlkeler):
-                    ws['C'+str(i)] = row.phone_area
-                    ws['D'+str(i)] = row.secure
+                    ws['C' + str(i)] = row.phone_area
+                    ws['D' + str(i)] = row.secure
 
-                i = i+1
+                i = i + 1
 
             return ws
         except Exception:
@@ -73,7 +72,7 @@ class Export():
         try:
             ws = wb.create_sheet("KV Profiller")
 
-            # TITLE
+            # TITLE
             ws['A1'] = "Kodu"
             ws['B1'] = "Profil"
             ws['C1'] = "Birim"
@@ -93,11 +92,11 @@ class Export():
 
             i = 2
             for row in data:
-                ws['A'+str(i)] = row.pidm
-                ws['B'+str(i)] = row.profil_name
-                ws['C'+str(i)] = row.birim_name
-                ws['D'+str(i)] = json.dumps(row.data)
-                i = i+1
+                ws['A' + str(i)] = row.pidm
+                ws['B' + str(i)] = row.profil_name
+                ws['C' + str(i)] = row.birim_name
+                ws['D' + str(i)] = json.dumps(row.data)
+                i = i + 1
 
             return ws
 
@@ -109,7 +108,7 @@ class Export():
         try:
             ws = wb.create_sheet("KV Paylaşımları")
 
-            # TITLE
+            # TITLE
             ws['A1'] = "Kodu"
             ws['B1'] = "Birim"
             ws['C1'] = "Veri Kategorisi"
@@ -136,14 +135,14 @@ class Export():
 
             i = 2
             for row in data:
-                ws['A'+str(i)] = row.pidm
-                ws['B'+str(i)] = row.birim_name
-                ws['C'+str(i)] = row.kv_name
-                ws['D'+str(i)] = row.kurum_name
-                ws['E'+str(i)] = json.dumps(row.islemeamaclari_data)
-                ws['F'+str(i)] = json.dumps(row.paylasimamaclari_data)
-                ws['G'+str(i)] = json.dumps(row.paylasimsekilleri_data)
-                i = i+1
+                ws['A' + str(i)] = row.pidm
+                ws['B' + str(i)] = row.birim_name
+                ws['C' + str(i)] = row.kv_name
+                ws['D' + str(i)] = row.kurum_name
+                ws['E' + str(i)] = json.dumps(row.islemeamaclari_data)
+                ws['F' + str(i)] = json.dumps(row.paylasimamaclari_data)
+                ws['G' + str(i)] = json.dumps(row.paylasimsekilleri_data)
+                i = i + 1
 
             return ws
 
@@ -155,7 +154,7 @@ class Export():
         try:
             ws = wb.create_sheet("KV Ana Verileri")
 
-            # TITLE
+            # TITLE
             ws['A1'] = "Kodu"
             ws['B1'] = "Birim"
             ws['C1'] = "Veri Kategorisi"
@@ -183,24 +182,23 @@ class Export():
             # model=ViewKVAnaveriModel
             model = ModelViewAnaveriler
 
-            data = self.session.query(model.pidm, model.birim_name, model.kv_name, model.sure_name, model.ulkeler_data, model.kanallar_data,
-                                      model.dokumanlar_data, model.sistemler_data, model.dayanaklar_data, model.ortamlar_data, model.tedbirler_data).filter_by(cid=cid_)
+            data = self.session.query(model).filter_by(cid=cid_)
             data = data.order_by(model.birim_name, model.kv_name)
 
             i = 2
             for row in data:
-                ws['A'+str(i)] = row.pidm
-                ws['B'+str(i)] = row.birim_name
-                ws['C'+str(i)] = row.kv_name
-                ws['D'+str(i)] = row.sure_name
-                ws['E'+str(i)] = json.dumps(row.ulkeler_data)
-                ws['F'+str(i)] = json.dumps(row.kanallar_data)
-                ws['G'+str(i)] = json.dumps(row.dokumanlar_data)
-                ws['H'+str(i)] = json.dumps(row.sistemler_data)
-                ws['I'+str(i)] = json.dumps(row.dayanaklar_data)
-                ws['J'+str(i)] = json.dumps(row.ortamlar_data)
-                ws['K'+str(i)] = json.dumps(row.tedbirler_data)
-                i = i+1
+                ws['A' + str(i)] = row.pidm
+                ws['B' + str(i)] = row.birim_name
+                ws['C' + str(i)] = row.kv_name
+                ws['D' + str(i)] = row.sure_name
+                ws['E' + str(i)] = json.dumps(row.ulkeler_data)
+                ws['F' + str(i)] = json.dumps(row.kanallar_data)
+                ws['G' + str(i)] = json.dumps(row.dokumanlar_data)
+                ws['H' + str(i)] = json.dumps(row.sistemler_data)
+                ws['I' + str(i)] = json.dumps(row.dayanaklar_data)
+                ws['J' + str(i)] = json.dumps(row.ortamlar_data)
+                ws['K' + str(i)] = json.dumps(row.tedbirler_data)
+                i = i + 1
 
             return ws
 
@@ -235,7 +233,7 @@ class Export():
             ws = self.createSheetKVPaylasim(wb, cid_)
             ws = self.createSheetKVAnaveri(wb, cid_)
 
-            # Make header bold
+            # Make header bold
             # for cell in ws["1:1"]:
             #     cell.font = Font(bold=True)
 

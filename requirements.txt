@@ -3,3 +3,4 @@ sqlalchemy
 psycopg2-binary
 flask-cors
 pyjwt
+python3 -m pip install -U pylint
