@@ -27,19 +27,17 @@ class Gfox ():
         except Exception:
             return "Error!"
 
-    def isAdminUser(self, uid):
+    def isDpoUser(self, uid):
         try:
             filter = {"uid": uid}
-            sql = "select 1 from auth_login where uid={uid!r} and admin=true limit 1".format(**filter)
+            sql = "select 1 from auth where uid={uid!r} and (dpo=true or admin=true) limit 1".format(**filter)
             result = self.session.execute(sql)
 
-            admin = False
+            dpo = False
             for exist in result:
-                admin = True
+                dpo = True
 
-            print("admin? ", admin)
-
-            return admin
+            return dpo
 
         except Exception as err:
             print("Exception Error: ", err)
@@ -51,7 +49,7 @@ def getCidName(cid):
     return cc.getCidName(cid)
 
 
-def isAdminUser(uid):
+def isDpoUser(uid):
     cc = Gfox()
-    return cc.isAdminUser(uid)
+    return cc.isDpoUser(uid)
 

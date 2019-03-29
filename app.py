@@ -23,8 +23,8 @@ import logging
 
 app = Flask(__name__)
 
-logger = logging.getLogger('gunicorn.error')
 
+logger = logging.getLogger('gunicorn.error')
 
 # TR karakterler \n\bbn\a vb. ascii olarak basmaası iin
 app.config['JSON_AS_ASCII'] = False

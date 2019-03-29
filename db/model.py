@@ -196,22 +196,33 @@ class ModelTedbirler(TanimlarBase, _Base):
     __tablename__ = 't_tedbirler'
 
 
-class AuthModel(_Base):
-    __tablename__ = 'view_auth'
-    # SQLAlchemt her tabloda primary_key istediği için eklendi
-    pidm = Column('pidm', Integer(), primary_key=True)
-    uid = Column('uid', String(60))
-    cid = Column('cid', Integer())
-    cid_name = Column('cid_name', String(60))
+class ModelCid(_Base):
+    __tablename__ = 't_cid'
+    pidm = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String)
 
 
-class AuthLoginModel(_Base):
-    __tablename__ = 'auth_login'
+class ModelAuth(_Base):
+    __tablename__ = 'auth'
     uid = Column(String, primary_key=True)
     pwd = Column(String)
-    enabled = Column(Boolean(), default=False)
-    admin = Column(Boolean(), default=False)
+    dpo = Column(Boolean, default=False)
+    admin = Column(Boolean, default=False)
+    enabled = Column(Boolean, default=False)
+    cid_data = Column(JSON())
     timestamp = Column(TIMESTAMP, default=datetime.now())
+
+
+class ModelViewAuth(_Base):
+    __tablename__ = 'view_auth'
+    # SQLAlchemt her tabloda primary_key istediği için eklendi
+    uid = Column(String, primary_key=True)
+    cid = Column(Integer, primary_key=True)
+    cid_name = Column(String)
+    pwd = Column(String)
+    dpo = Column(Boolean)
+    admin = Column(Boolean)
+    enabled = Column(Boolean)
 
 
 class ModelTalepler(ModelBase, _Base):

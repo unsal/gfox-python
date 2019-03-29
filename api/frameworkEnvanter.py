@@ -3,7 +3,7 @@ from flask import jsonify
 from db.connection import Connect
 from sqlalchemy.inspection import inspect
 from db.model import *
-from api.gfox import isAdminUser
+from api.gfox import isDpoUser
 
 
 class Envanter ():
@@ -29,11 +29,11 @@ class Envanter ():
             cid = params.get('cid')
             uid = params.get('uid')
 
-            adminMode = isAdminUser(uid)
+            dpoMode = isDpoUser(uid)
 
-            if adminMode:
+            if dpoMode:
                 result = self.session.query(self.model).filter_by(cid=cid).order_by(self.model.pidm.desc())
-                print("uid: ", uid, " as admin user connected..")
+                print("uid: ", uid, " as dpo user connected..")
             else:
                 result = self.session.query(self.model).filter_by(cid=cid, uid=uid).order_by(self.model.pidm.desc())
                 print("uid: ", uid, " as regular user connected..")
