@@ -6,7 +6,7 @@ from flask import request
 # import json
 
 # API
-from db.auth import getCids, login
+from db.auth import getCids, login, actionAccounts
 # from api.export import downloadExcel
 
 from db.model import *
@@ -53,11 +53,17 @@ def _getCids():
 @app.route('/auth/login', methods=['POST'])
 def _login():
     data = request.get_json(silent=True)
-    uid = data.get("uid")
-    pwd = data.get("pwd")
-    response = login(uid, pwd)
+    username = data.get("username")
+    password = data.get("password")
+    response = login(username, password)
 
     return response
+
+
+@app.route('/auth/accounts/<type>', methods=['POST'])
+def returnAccounts(type):
+    params = request.get_json(silent=True)
+    return actionAccounts(params, type)
 
 # ****************** EXCEL ************************************************
 

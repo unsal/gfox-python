@@ -204,25 +204,27 @@ class ModelCid(_Base):
 
 class ModelAuth(_Base):
     __tablename__ = 'auth'
-    uid = Column(String, primary_key=True)
-    pwd = Column(String)
+    username = Column(String, primary_key=True)
+    password = Column(String)
     dpo = Column(Boolean, default=False)
     admin = Column(Boolean, default=False)
     enabled = Column(Boolean, default=False)
     cid_data = Column(JSON())
     timestamp = Column(TIMESTAMP, default=datetime.now())
+    uid = Column(String)
 
 
 class ModelViewAuth(_Base):
     __tablename__ = 'view_auth'
     # SQLAlchemt her tabloda primary_key istediği için eklendi
-    uid = Column(String, primary_key=True)
+    username = Column(String, primary_key=True)
+    password = Column(String)
     cid = Column(Integer, primary_key=True)
     cid_name = Column(String)
-    pwd = Column(String)
     dpo = Column(Boolean)
     admin = Column(Boolean)
     enabled = Column(Boolean)
+    uid = Column(String, primary_key=True)
 
 
 class ModelTalepler(ModelBase, _Base):

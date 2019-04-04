@@ -52,4 +52,3 @@ def getCidName(cid):
 def isDpoUser(uid):
     cc = Gfox()
     return cc.isDpoUser(uid)
-
