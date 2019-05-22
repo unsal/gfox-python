@@ -204,7 +204,8 @@ class ModelCid(_Base):
 
 class ModelAuth(_Base):
     __tablename__ = 'auth'
-    username = Column(String, primary_key=True)
+    pidm = Column(Integer, primary_key=True)
+    username = Column(String)
     password = Column(String)
     dpo = Column(Boolean, default=False)
     admin = Column(Boolean, default=False)
@@ -217,14 +218,16 @@ class ModelAuth(_Base):
 class ModelViewAuth(_Base):
     __tablename__ = 'view_auth'
     # SQLAlchemt her tabloda primary_key istediği için eklendi
-    username = Column(String, primary_key=True)
+    rownumber = Column(Integer, primary_key=True)  # edit de unique satırı yakalamak için generate ediliyor. 
+    pidm = Column(Integer)
+    username = Column(String)
     password = Column(String)
-    cid = Column(Integer, primary_key=True)
+    cid = Column(Integer)
     cid_name = Column(String)
     dpo = Column(Boolean)
     admin = Column(Boolean)
     enabled = Column(Boolean)
-    uid = Column(String, primary_key=True)
+    uid = Column(String)
 
 
 class ModelTalepler(ModelBase, _Base):

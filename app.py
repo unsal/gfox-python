@@ -52,18 +52,16 @@ def _getCids():
 
 @app.route('/auth/login', methods=['POST'])
 def _login():
-    data = request.get_json(silent=True)
-    username = data.get("username")
-    password = data.get("password")
-    response = login(username, password)
+    params = request.get_json(silent=True)
+    response = login(params)
 
     return response
 
 
-@app.route('/auth/accounts/<type>', methods=['POST'])
-def returnAccounts(type):
+@app.route('/auth/accounts', methods=['POST'])
+def returnAccounts():
     params = request.get_json(silent=True)
-    return actionAccounts(params, type)
+    return actionAccounts(params)
 
 # ****************** EXCEL ************************************************
 

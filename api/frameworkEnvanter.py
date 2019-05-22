@@ -89,11 +89,10 @@ class Envanter ():
         try:
             pidm = params.get('pidm')
             cid = params.get('cid')
-            uid = params.get('uid')
+            uid = params.get('uid')  # başkasının yaptığı kaydı update etmez yoksa.. kaldırdım aşağıdaki filtreden
 
-            # uid = params.get('uid')
             row = self.session.query(
-                self.model).filter_by(pidm=pidm, cid=cid, uid=uid)
+                self.model).filter_by(pidm=pidm, cid=cid)
 
             row.update(params)
 
@@ -111,7 +110,7 @@ class Envanter ():
 
             for row in record:
                 self.session.add(self.model(**row))
-
+            
             self.session.commit()
 
             print("*** Record ADD successfully *** ")
@@ -124,10 +123,10 @@ class Envanter ():
         try:
             pidm = params.get('pidm')
             cid = params.get('cid')
-            uid = params.get('uid')
+            # uid = params.get('uid')  # başkasının yaptığı kaydı update etmez yoksa.. kaldırdım aşağıdaki filtreden
 
             row = self.session.query(self.model).filter_by(
-                pidm=pidm, cid=cid, uid=uid).one()
+                pidm=pidm, cid=cid).one()
             self.session.delete(row)
             self.session.commit()
             print("*** Record DELETED successfully ***")
